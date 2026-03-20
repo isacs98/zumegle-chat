@@ -74,6 +74,9 @@ const activeRooms = new Map();
 const userIPs = new Map();
 const connectionsPerIP = new Map();
 const violacoesUsuario = new Map();
+const messageTimes = new Map();    // Rate limit: timestamps das msgs por socket
+const RATE_LIMIT_MSGS = 5;         // Max mensagens
+const RATE_LIMIT_WINDOW = 3000;    // em 3 segundos
 
 let waitingQueue = [];
 let totalOnlineUsers = 0;
@@ -241,6 +244,18 @@ io.on('connection', (socket) => {
             return;
         }
 
+        // ── RATE LIMIT (velocidade de mensagens) ─────────────────────────────
+        const now = Date.now();
+        const times = (messageTimes.get(socket.id) || []).filter(t => now - t < RATE_LIMIT_WINDOW);
+        times.push(now);
+        messageTimes.set(socket.id, times);
+
+        if (times.length > RATE_LIMIT_MSGS) {
+            flaggedIPs.add(currentIp);
+            console.log(`⚡ Rate limit atingido - IP: ${currentIp}`);
+            return; // Descarta a mensagem silenciosamente
+        }
+
         // ── DETECÇÃO DE SPAM ──────────────────────────────────────────────────
         const lastMsgObj = userLastMessage.get(socket.id);
         if (lastMsgObj && lastMsgObj.text === trimmed) {
@@ -294,6 +309,7 @@ io.on('connection', (socket) => {
         userLastMessage.delete(socket.id);
         userIPs.delete(socket.id);
         violacoesUsuario.delete(socket.id);
+        messageTimes.delete(socket.id);
         handleDisconnect(socket);
     });
 
