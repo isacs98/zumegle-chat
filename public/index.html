@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zumegle: Fale com estranhos!</title>
+    <title>Zumegle — Chat Anônimo Brasileiro</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- META TAGS SEO -->
+    <meta name="description" content="O chat anônimo brasileiro. Encontre pessoas aleatórias para conversar agora.">
+    <meta name="keywords" content="chat anônimo, conversar com estranhos, omegle brasil, zumegle, chat aleatório">
+    <meta name="robots" content="index, follow">
+
+    <!-- OPEN GRAPH (WhatsApp, Facebook, Discord) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zumegle-chat.onrender.com">
+    <meta property="og:title" content="Zumegle — Chat Anônimo Brasileiro">
+    <meta property="og:description" content="O chat anônimo brasileiro. Encontre pessoas aleatórias para conversar agora.">
+    <meta property="og:image" content="https://zumegle-chat.onrender.com/og-image.svg">
+
+    <!-- TWITTER/X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zumegle — Chat Anônimo Brasileiro">
+    <meta name="twitter:description" content="O chat anônimo brasileiro. Encontre pessoas aleatórias para conversar agora.">
+    <meta name="twitter:image" content="https://zumegle-chat.onrender.com/og-image.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Fontes do Google: Poppins (Títulos) e Inter (Textos) -->
@@ -604,6 +626,8 @@
         let captchaToken = "";
         let recaptchaWidgetId = null;
         let stopButtonLocked = false; // Evita duplo clique no botão Parar/Nova Conversa
+        let waitingTimer = null;
+        let waitingSeconds = 0;
 
         // Auto-resize do textarea (Mobile friendly) + contador de caracteres
         const charCounter = document.getElementById('char-counter');
@@ -709,6 +733,8 @@
             typingIndicator.classList.add('hidden');
             msgInput.style.height = 'auto'; // reseta o auto-resize
             charCounter.classList.add('hidden'); // reseta o contador
+            clearInterval(waitingTimer);
+            waitingSeconds = 0;
             appendSystemMessage("Estabelecendo conexão com o servidor...");
             
             if (socket) {
@@ -738,7 +764,25 @@
                 if (onlineCountEl) onlineCountEl.textContent = count.toLocaleString('pt-BR');
             });
 
-            socket.on('waiting', () => appendSystemMessage("Procurando alguém para conversar..."));
+            socket.on('waiting', () => {
+                appendSystemMessage("Procurando alguém para conversar... (0s)");
+                waitingSeconds = 0;
+                clearInterval(waitingTimer);
+                waitingTimer = setInterval(() => {
+                    waitingSeconds++;
+                    const mins = Math.floor(waitingSeconds / 60);
+                    const secs = waitingSeconds % 60;
+                    const timeStr = mins > 0 ? mins + "m " + secs + "s" : secs + "s";
+                    const msgs = chatBox.querySelectorAll('[data-waiting]');
+                    if (msgs.length > 0) {
+                        msgs[msgs.length - 1].textContent = "Procurando alguém para conversar... (" + timeStr + ")";
+                    }
+                }, 1000);
+                const allMsgs = chatBox.querySelectorAll('div');
+                if (allMsgs.length > 0) {
+                    allMsgs[allMsgs.length - 1].setAttribute('data-waiting', 'true');
+                }
+            });
             
             socket.on('captcha_required', () => {
                 appendSystemMessage("Verificação de segurança necessária para continuar.", true);
@@ -755,6 +799,7 @@
             });
             
             socket.on('chat_started', (data) => {
+                clearInterval(waitingTimer);
                 chatBox.innerHTML = '';
                 isChatting = true;
                 msgInput.disabled = false;
