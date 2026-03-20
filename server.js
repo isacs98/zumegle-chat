@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const http = require('http');
 const https = require('https'); 
 const { Server } = require('socket.io');
@@ -11,26 +11,37 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Sistemas de Segurança
-const bannedIPs = new Set();          // IPs permanentemente banidos (atingiram limite de denúncias)
-const flaggedIPs = new Set();         // IPs identificados como Spam/Bots (A partir de agora, pedem Captcha a cada nova conversa)
-const reportedIPs = new Map();        // Conta o número de denúncias por IP: IP -> Contagem
-const userLastMessage = new Map();    // Guarda a última mensagem de um socket: socket.id -> { text: "...", count: 1 }
+const bannedIPs = new Set();          
+const flaggedIPs = new Set();         
+const reportedIPs = new Map();        
+const userLastMessage = new Map();    
 
 const activeRooms = new Map();
 const userIPs = new Map();
 let waitingQueue = [];
 let totalOnlineUsers = 0;
 
+// SISTEMA DE LIMPEZA DE MEMÓRIA (Essencial para a Nuvem)
+// Limpa os IPs reportados a cada 24h para a memória do Render Grátis não estourar
+setInterval(() => {
+    reportedIPs.clear();
+    console.log('🧹 Limpeza diária de memória efetuada.');
+}, 24 * 60 * 60 * 1000);
+
 io.on('connection', (socket) => {
     totalOnlineUsers++;
     io.emit('online_count', totalOnlineUsers);
 
-    const ip = socket.handshake.address;
+    // CAPTURA O IP REAL (Proteção para quando o site está hospedado no Render)
+    let ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+    if (typeof ip === 'string' && ip.includes(',')) {
+        ip = ip.split(',')[0].trim();
+    }
     userIPs.set(socket.id, ip);
 
     // 1. O IP FOI BANIDO PERMANENTEMENTE?
     if (bannedIPs.has(ip)) {
-        socket.emit('system_message', 'ACESSO NEGADO: Você foi banido permanentemente dos nossos servidores por múltiplas violações dos Termos de Serviço.');
+        socket.emit('system_message', 'ACESSO NEGADO: Foste banido permanentemente dos nossos servidores por múltiplas violações dos Termos de Serviço.');
         socket.disconnect();
         return;
     }
@@ -42,19 +53,15 @@ io.on('connection', (socket) => {
         let userTags = data?.tags || [];
 
         // 2. O IP ESTÁ MARCADO COMO SPAM/BOT?
-        // Se sim, ele TEM OBRIGATORIAMENTE de fornecer um token do Captcha antes de CADA nova conversa.
         if (flaggedIPs.has(ip)) {
             if (!captchaToken || typeof captchaToken !== 'string') {
-                // Diz ao frontend para abrir o modal do Captcha
                 socket.emit('captcha_required');
                 return;
             }
 
-            // Chave secreta de TESTE oficial do Google
             const secretKey = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'; 
             const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
 
-            // Valida o Captcha no Google
             https.get(url, (res) => {
                 let chunkData = '';
                 res.on('data', (chunk) => chunkData += chunk);
@@ -62,11 +69,9 @@ io.on('connection', (socket) => {
                     try {
                         const result = JSON.parse(chunkData);
                         if (result.success) {
-                            // Sucesso! Ele é humano. Entra no Matchmaking.
-                            // Nota: NÃO removemos ele dos flaggedIPs. Ele terá de fazer o captcha na próxima vez que pular de chat.
                             executeMatchmaking(socket, userTags);
                         } else {
-                            socket.emit('system_message', 'Falha na verificação do Captcha. Tente novamente.');
+                            socket.emit('system_message', 'Falha na verificação do Captcha. Tenta novamente.');
                         }
                     } catch (e) {
                         socket.emit('system_message', 'Erro interno ao validar Captcha.');
@@ -77,7 +82,6 @@ io.on('connection', (socket) => {
             });
             
         } else {
-            // Usuário normal, não precisa de Captcha!
             executeMatchmaking(socket, userTags);
         }
     });
@@ -86,8 +90,10 @@ io.on('connection', (socket) => {
         let matchIndex = -1;
         let commonTags = [];
 
+        // TENTATIVA 1: Procurar alguém com as MESMAS Tags
         if (tags && tags.length > 0) {
             matchIndex = waitingQueue.findIndex(u => {
+                if (!u.tags) return false;
                 const intersection = u.tags.filter(t => tags.includes(t));
                 if (intersection.length > 0) {
                     commonTags = intersection; 
@@ -95,8 +101,12 @@ io.on('connection', (socket) => {
                 }
                 return false;
             });
-        } else {
-            matchIndex = waitingQueue.findIndex(u => !u.tags || u.tags.length === 0);
+        } 
+        
+        // TENTATIVA 2: Se não houver tags, ou se não achar ninguém parecido, liga com qualquer pessoa disponível!
+        if (matchIndex === -1) {
+            matchIndex = waitingQueue.findIndex(u => !u.tags || u.tags.length === 0 || u.tags.length > 0);
+            commonTags = []; // Limpa as tags em comum porque foi uma ligação aleatória forçada
         }
 
         if (matchIndex !== -1) {
@@ -125,7 +135,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // 3. SISTEMA DE DETECÇÃO DE SPAM E BOTS
     socket.on('send_message', (msg) => {
         const room = activeRooms.get(socket.id);
         if (!room) return;
@@ -133,26 +142,20 @@ io.on('connection', (socket) => {
         const currentIp = userIPs.get(socket.id);
         const lastMsgObj = userLastMessage.get(socket.id);
 
-        // Verifica se a mensagem é exata e estritamente igual à anterior
         if (lastMsgObj && lastMsgObj.text === msg) {
             lastMsgObj.count++;
-            
-            // Se repetiu a MESMA mensagem 100 vezes ou mais (Limite ajustado)
             if (lastMsgObj.count >= 100) {
-                flaggedIPs.add(currentIp); // Marca o IP como possível bot
+                flaggedIPs.add(currentIp); 
             }
         } else {
-            // Nova mensagem diferente, reseta o contador deste usuário
             userLastMessage.set(socket.id, { text: msg, count: 1 });
         }
 
-        // Repassa a mensagem normalmente
         socket.to(room).emit('receive_message', msg);
     });
 
     socket.on('stop_chat', () => handleDisconnect(socket));
 
-    // 4. SISTEMA DE MODERAÇÃO E DENÚNCIAS
     socket.on('report_user', () => {
         const room = activeRooms.get(socket.id);
         if (room) {
@@ -162,11 +165,9 @@ io.on('connection', (socket) => {
                     if (clientId !== socket.id) {
                         const strangerIP = userIPs.get(clientId);
                         if (strangerIP) {
-                            // Adiciona 1 denúncia ao cadastro do IP
                             const currentReports = (reportedIPs.get(strangerIP) || 0) + 1;
                             reportedIPs.set(strangerIP, currentReports);
 
-                            // Se atingiu o limite de 3 denúncias, Bane para sempre
                             if (currentReports >= 3) {
                                 bannedIPs.add(strangerIP);
                             }
@@ -182,7 +183,7 @@ io.on('connection', (socket) => {
         totalOnlineUsers--;
         io.emit('online_count', Math.max(0, totalOnlineUsers));
         
-        userLastMessage.delete(socket.id); // Limpa o histórico de mensagens
+        userLastMessage.delete(socket.id); 
         userIPs.delete(socket.id);
         handleDisconnect(socket);
     });
@@ -207,5 +208,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`🚀 Servidor a correr na porta ${PORT}`);
 });
