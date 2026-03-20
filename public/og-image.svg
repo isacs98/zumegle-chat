@@ -1,0 +1,48 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1117"/>
+      <stop offset="100%" stop-color="#1a1d27"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="icon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#3b82f6" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="250" fill="#f97316" opacity="0.05"/>
+
+  <!-- Icon -->
+  <rect x="90" y="215" width="120" height="120" rx="28" fill="url(#icon)"/>
+  <path d="M175 240H125a10 10 0 0 0-10 10v27a10 10 0 0 0 10 10h7l-3 13 17-13h19a10 10 0 0 0 10-10v-27a10 10 0 0 0-10-10z" fill="white" opacity="0.95"/>
+
+  <!-- Title -->
+  <text x="240" y="290" font-family="Arial Black, sans-serif" font-size="96" font-weight="900" fill="url(#title)">Zumegle</text>
+
+  <!-- Divider -->
+  <rect x="90" y="360" width="1020" height="3" rx="2" fill="#334155"/>
+
+  <!-- Description -->
+  <text x="90" y="420" font-family="Arial, sans-serif" font-size="38" fill="#94a3b8">O chat anônimo brasileiro.</text>
+  <text x="90" y="470" font-family="Arial, sans-serif" font-size="38" fill="#94a3b8">Encontre pessoas aleatórias para conversar agora.</text>
+
+  <!-- URL -->
+  <text x="90" y="560" font-family="Arial, sans-serif" font-size="28" fill="#475569">zumegle-chat.onrender.com</text>
+
+  <!-- Online badge -->
+  <circle cx="1100" cy="555" r="8" fill="#22c55e"/>
+  <circle cx="1100" cy="555" r="8" fill="#22c55e" opacity="0.4">
+    <animate attributeName="r" from="8" to="16" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <text x="1060" y="560" font-family="Arial, sans-serif" font-size="24" fill="#22c55e" text-anchor="end">Online</text>
+</svg>
