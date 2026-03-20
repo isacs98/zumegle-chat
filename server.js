@@ -8,44 +8,81 @@ const helmet = require('helmet');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    // Limita o tamanho máximo de qualquer pacote Socket.io (mensagem, evento, etc.)
-    maxHttpBufferSize: 1e5 // 100 KB — suficiente para uma mensagem de texto
+    maxHttpBufferSize: 1e5
 });
 
-// ─── SEGURANÇA HTTP ────────────────────────────────────────────────────────────
-// Helmet adiciona headers de segurança (XSS, clickjacking, etc.)
-// Content Security Policy desativado para não quebrar o Tailwind CDN / Google Fonts
 app.use(helmet({ contentSecurityPolicy: false }));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ─── CONFIGURAÇÕES ─────────────────────────────────────────────────────────────
-const MSG_MAX_LENGTH = 500;        // Máximo de caracteres por mensagem
-const MAX_CONNECTIONS_PER_IP = 4;  // Máximo de abas/conexões simultâneas do mesmo IP
-const SPAM_THRESHOLD = 100;        // Mensagens idênticas repetidas para marcar como spam
-const TAGS_MAX = 10;               // Máximo de tags por utilizador
-const TAG_MAX_LENGTH = 30;         // Máximo de caracteres por tag
+const MSG_MAX_LENGTH = 500;
+const MAX_CONNECTIONS_PER_IP = 4;
+const SPAM_THRESHOLD = 100;
+const TAGS_MAX = 10;
+const TAG_MAX_LENGTH = 30;
+const MAX_VIOLATIONS = 3;
 
-// ─── ESTRUTURAS DE DADOS ───────────────────────────────────────────────────────
+// Vendas e spam comercial
+const PALAVRAS_VENDAS = [
+    'onlyfans','privacy','compre agora','vendo','promoção','desconto',
+    'ganhar dinheiro','renda extra','trabalhe em casa','oportunidade de negócio',
+    'whatsapp','telegram','instagram','tiktok','twitter','facebook',
+    'snapchat','kwai','seguidores',
+];
+
+// Links e URLs
+const PALAVRAS_LINKS = [
+    'http://','https://','www.','bit.ly','tinyurl','t.me','wa.me',
+];
+
+// Crime e conteúdo ilegal
+const PALAVRAS_CRIME = [
+    'tráfico','trafico','cocaína','cocaina','maconha','crack','heroína',
+    'heroina','ecstasy','arma de fogo','pistola à venda','fuzil',
+    'matar alguém','sequestro','extorsão','extorsao','lavagem de dinheiro',
+    'pedofilia','pedófilo','pedofilo','criança nua','crianca nua','csam',
+    'abuso sexual infantil','cartão clonado','cartao clonado',
+    'documento falso','identidade falsa','hackear conta',
+];
+
+const TODAS_PALAVRAS_PROIBIDAS = [
+    ...PALAVRAS_VENDAS,
+    ...PALAVRAS_LINKS,
+    ...PALAVRAS_CRIME,
+];
+
+function verificarMensagem(msg) {
+    const msgLower = msg.toLowerCase();
+    let msgCensurada = msg;
+    let temViolacao = false;
+
+    for (const palavra of TODAS_PALAVRAS_PROIBIDAS) {
+        if (msgLower.includes(palavra.toLowerCase())) {
+            temViolacao = true;
+            const regex = new RegExp(palavra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+            msgCensurada = msgCensurada.replace(regex, '***');
+        }
+    }
+
+    return { temViolacao, msgCensurada };
+}
+
 const bannedIPs = new Set();
 const flaggedIPs = new Set();
 const reportedIPs = new Map();
 const userLastMessage = new Map();
 const activeRooms = new Map();
 const userIPs = new Map();
-const connectionsPerIP = new Map(); // NOVO: controla abas simultâneas
+const connectionsPerIP = new Map();
+const violacoesUsuario = new Map();
 
 let waitingQueue = [];
 let totalOnlineUsers = 0;
 
-// ─── LIMPEZA DE MEMÓRIA DIÁRIA ─────────────────────────────────────────────────
-// Essencial para o plano gratuito do Render não estourar a memória
 setInterval(() => {
     reportedIPs.clear();
     console.log('🧹 Limpeza diária de memória efetuada.');
 }, 24 * 60 * 60 * 1000);
 
-// ─── HELPER: obter IP real do cliente ─────────────────────────────────────────
 function getIP(socket) {
     let ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
     if (typeof ip === 'string' && ip.includes(',')) {
@@ -54,7 +91,6 @@ function getIP(socket) {
     return ip;
 }
 
-// ─── HELPER: sanitizar e validar tags ─────────────────────────────────────────
 function sanitizeTags(raw) {
     if (!Array.isArray(raw)) return [];
     return raw
@@ -63,19 +99,16 @@ function sanitizeTags(raw) {
         .slice(0, TAGS_MAX);
 }
 
-// ─── EVENTOS DE CONEXÃO ────────────────────────────────────────────────────────
 io.on('connection', (socket) => {
     const ip = getIP(socket);
     userIPs.set(socket.id, ip);
 
-    // 1. BAN PERMANENTE?
     if (bannedIPs.has(ip)) {
         socket.emit('system_message', 'ACESSO NEGADO: Foste banido permanentemente dos nossos servidores por múltiplas violações dos Termos de Serviço.');
         socket.disconnect();
         return;
     }
 
-    // 2. LIMITE DE CONEXÕES SIMULTÂNEAS POR IP
     const currentConns = connectionsPerIP.get(ip) || 0;
     if (currentConns >= MAX_CONNECTIONS_PER_IP) {
         socket.emit('system_message', 'Demasiadas conexões do mesmo dispositivo. Fecha outras abas e tenta novamente.');
@@ -83,25 +116,23 @@ io.on('connection', (socket) => {
         return;
     }
     connectionsPerIP.set(ip, currentConns + 1);
+    violacoesUsuario.set(socket.id, 0);
 
     totalOnlineUsers++;
     io.emit('online_count', totalOnlineUsers);
 
-    // ─── START CHAT ───────────────────────────────────────────────────────────
     socket.on('start_chat', (data) => {
         if (activeRooms.has(socket.id)) return;
 
         const captchaToken = data?.captchaToken || data;
         const userTags = sanitizeTags(data?.tags);
 
-        // IP MARCADO COMO SPAM? Exige captcha.
         if (flaggedIPs.has(ip)) {
             if (!captchaToken || typeof captchaToken !== 'string') {
                 socket.emit('captcha_required');
                 return;
             }
 
-            // Chave secreta via variável de ambiente (NUNCA hardcoded em produção!)
             const secretKey = process.env.RECAPTCHA_SECRET_KEY || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
             const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
 
@@ -123,18 +154,15 @@ io.on('connection', (socket) => {
             }).on('error', () => {
                 socket.emit('system_message', 'Falha na comunicação com o sistema de segurança.');
             });
-
         } else {
             executeMatchmaking(socket, userTags);
         }
     });
 
-    // ─── MATCHMAKING ──────────────────────────────────────────────────────────
     function executeMatchmaking(socket, tags) {
         let matchIndex = -1;
         let commonTags = [];
 
-        // Tentativa 1: alguém com tags em comum
         if (tags && tags.length > 0) {
             matchIndex = waitingQueue.findIndex(u => {
                 if (!u.tags) return false;
@@ -147,7 +175,6 @@ io.on('connection', (socket) => {
             });
         }
 
-        // Tentativa 2: qualquer pessoa disponível (fallback aleatório)
         if (matchIndex === -1) {
             matchIndex = waitingQueue.length > 0 ? 0 : -1;
             commonTags = [];
@@ -172,29 +199,50 @@ io.on('connection', (socket) => {
         }
     }
 
-    // ─── TYPING ───────────────────────────────────────────────────────────────
     socket.on('typing', (isTyping) => {
         const room = activeRooms.get(socket.id);
         if (room) {
-            // Valida que é boolean para não mandar lixo ao parceiro
             socket.to(room).emit('stranger_typing', !!isTyping);
         }
     });
 
-    // ─── ENVIO DE MENSAGEM ────────────────────────────────────────────────────
     socket.on('send_message', (msg) => {
         const room = activeRooms.get(socket.id);
         if (!room) return;
 
-        // Validação de tipo e tamanho
         if (typeof msg !== 'string') return;
         const trimmed = msg.trim();
         if (trimmed.length === 0 || trimmed.length > MSG_MAX_LENGTH) return;
 
-        // Detecção de spam (100 msgs idênticas em sequência)
         const currentIp = userIPs.get(socket.id);
-        const lastMsgObj = userLastMessage.get(socket.id);
 
+        // ── VERIFICAÇÃO DE PALAVRAS PROIBIDAS ─────────────────────────────────
+        const { temViolacao, msgCensurada } = verificarMensagem(trimmed);
+
+        if (temViolacao) {
+            const violacoes = (violacoesUsuario.get(socket.id) || 0) + 1;
+            violacoesUsuario.set(socket.id, violacoes);
+
+            console.log(`⚠️ Violação ${violacoes}/${MAX_VIOLATIONS} - IP: ${currentIp}`);
+
+            if (violacoes >= MAX_VIOLATIONS) {
+                bannedIPs.add(currentIp);
+                console.log(`🚫 IP banido por violações repetidas: ${currentIp}`);
+                setTimeout(() => {
+                    handleDisconnect(socket);
+                    socket.disconnect();
+                }, 2000);
+            }
+
+            // Quem enviou: não recebe aviso (não sabe que foi bloqueado)
+            // Quem recebe: vê a mensagem censurada + aviso
+            socket.to(room).emit('receive_message', msgCensurada);
+            socket.to(room).emit('system_message', '⚠️ Parte da mensagem foi ocultada por violar as regras da plataforma.');
+            return;
+        }
+
+        // ── DETECÇÃO DE SPAM ──────────────────────────────────────────────────
+        const lastMsgObj = userLastMessage.get(socket.id);
         if (lastMsgObj && lastMsgObj.text === trimmed) {
             lastMsgObj.count++;
             if (lastMsgObj.count >= SPAM_THRESHOLD) {
@@ -207,10 +255,8 @@ io.on('connection', (socket) => {
         socket.to(room).emit('receive_message', trimmed);
     });
 
-    // ─── PARAR CHAT ───────────────────────────────────────────────────────────
     socket.on('stop_chat', () => handleDisconnect(socket));
 
-    // ─── REPORTAR UTILIZADOR ─────────────────────────────────────────────────
     socket.on('report_user', () => {
         const room = activeRooms.get(socket.id);
         if (!room) return;
@@ -234,12 +280,10 @@ io.on('connection', (socket) => {
         handleDisconnect(socket);
     });
 
-    // ─── DESCONEXÃO ───────────────────────────────────────────────────────────
     socket.on('disconnect', () => {
         totalOnlineUsers = Math.max(0, totalOnlineUsers - 1);
         io.emit('online_count', totalOnlineUsers);
 
-        // Decrementa o contador de conexões do IP
         const connCount = (connectionsPerIP.get(ip) || 1) - 1;
         if (connCount <= 0) {
             connectionsPerIP.delete(ip);
@@ -249,10 +293,10 @@ io.on('connection', (socket) => {
 
         userLastMessage.delete(socket.id);
         userIPs.delete(socket.id);
+        violacoesUsuario.delete(socket.id);
         handleDisconnect(socket);
     });
 
-    // ─── HELPER: limpar sala ─────────────────────────────────────────────────
     function handleDisconnect(sock) {
         waitingQueue = waitingQueue.filter(u => u.socket.id !== sock.id);
 
@@ -271,7 +315,6 @@ io.on('connection', (socket) => {
     }
 });
 
-// ─── INICIAR SERVIDOR ─────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 Servidor a correr na porta ${PORT}`);
