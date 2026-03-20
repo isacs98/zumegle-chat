@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -320,7 +320,10 @@
             <button id="btn-stop" onclick="handleStopButton()" class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm transition-all min-w-[80px] sm:min-w-[120px] font-poppins text-sm sm:text-base">
                 Parar
             </button>
-            <textarea id="msg-input" class="flex-grow resize-none rounded-xl border border-gray-300 dark:border-gray-600 p-3 sm:p-3.5 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-inner transition-all" rows="1" placeholder="Digite uma mensagem..." onkeydown="handleEnter(event)"></textarea>
+            <div class="flex-grow flex flex-col relative">
+                <textarea id="msg-input" maxlength="500" class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-600 p-3 sm:p-3.5 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-inner transition-all" rows="1" placeholder="Digite uma mensagem..." onkeydown="handleEnter(event)"></textarea>
+                <span id="char-counter" class="absolute bottom-1 right-2 text-xs text-gray-400 dark:text-gray-500 pointer-events-none hidden">0/500</span>
+            </div>
             <button id="btn-send" onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 sm:py-3.5 px-5 sm:px-8 rounded-xl shadow-md disabled:opacity-50 transition-all font-poppins text-sm sm:text-base hidden sm:block">
                 Enviar
             </button>
@@ -600,12 +603,25 @@
         let typingTimeout;
         let captchaToken = "";
         let recaptchaWidgetId = null;
+        let stopButtonLocked = false; // Evita duplo clique no botão Parar/Nova Conversa
 
-        // Auto-resize do textarea (Mobile friendly)
+        // Auto-resize do textarea (Mobile friendly) + contador de caracteres
+        const charCounter = document.getElementById('char-counter');
         msgInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
             if(this.value === '') this.style.height = 'auto';
+
+            // Contador de caracteres — aparece a partir de 400
+            const len = this.value.length;
+            if (len >= 400) {
+                charCounter.classList.remove('hidden');
+                charCounter.textContent = `${len}/500`;
+                charCounter.classList.toggle('text-red-500', len >= 480);
+                charCounter.classList.toggle('text-gray-400', len < 480);
+            } else {
+                charCounter.classList.add('hidden');
+            }
         });
 
         function onCaptchaLoaded() { /* Script carregado pelo Google */ }
@@ -692,6 +708,7 @@
             
             typingIndicator.classList.add('hidden');
             msgInput.style.height = 'auto'; // reseta o auto-resize
+            charCounter.classList.add('hidden'); // reseta o contador
             appendSystemMessage("Estabelecendo conexão com o servidor...");
             
             if (socket) {
@@ -783,6 +800,7 @@
             
             msgInput.value = '';
             msgInput.style.height = 'auto';
+            charCounter.classList.add('hidden');
             msgInput.focus();
             clearTimeout(typingTimeout);
         }
@@ -795,6 +813,10 @@
         }
 
         function handleStopButton() {
+            if (stopButtonLocked) return;
+            stopButtonLocked = true;
+            setTimeout(() => { stopButtonLocked = false; }, 800);
+
             if (isChatting) {
                 if (socket) socket.emit('stop_chat');
                 disconnectChat("Você desconectou a chamada.");
