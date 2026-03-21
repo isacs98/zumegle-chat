@@ -297,7 +297,7 @@
         #chatbox { flex-grow: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 0; }
         
         .sys { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--text-muted); text-align: center; padding: 8px 16px; background: var(--bg-surface); border-radius: 8px; align-self: center; text-transform: uppercase; letter-spacing: 1px; max-width: 90%; word-break: break-word; }
-        .sys.alert { color: var(--status-danger); border: 1px solid rgba(239,68,68,0.3); }
+        .sys.alert { color: var(--status-danger); background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.4); padding: 10px 20px; }
         
         .mrow { display: flex; flex-direction: column; gap: 6px; max-width: 85%; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -872,6 +872,8 @@ function appendSystem(text,isAlert=false){
     d.className='sys'+(isAlert?' alert':'');
     d.textContent=text;
     chatbox.appendChild(d);
+    // Force scroll after short delay to ensure render
+    setTimeout(()=>scrollBot(), 50);
     scrollBot();
     return d;
 }
