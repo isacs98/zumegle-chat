@@ -868,12 +868,19 @@ function acceptTermsAndStart(){
 }
 
 function appendSystem(text,isAlert=false){
+    const wrapper=document.createElement('div');
+    wrapper.style.cssText='width:100%;display:flex;justify-content:center;margin:4px 0;';
     const d=document.createElement('div');
-    d.className='sys'+(isAlert?' alert':'');
+    if(isAlert){
+        d.style.cssText='display:inline-block;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;text-align:center;background:rgba(239,68,68,0.15);color:#ff6b6b;border:1px solid rgba(239,68,68,0.4);max-width:90%;word-break:break-word;';
+    } else {
+        d.style.cssText='display:inline-block;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;background:var(--bg-surface);color:var(--text-muted);max-width:90%;word-break:break-word;';
+    }
     d.textContent=text;
-    chatbox.appendChild(d);
-    // Force scroll after short delay to ensure render
-    setTimeout(()=>scrollBot(), 50);
+    if(!isAlert) d.setAttribute('data-waiting','');
+    wrapper.appendChild(d);
+    chatbox.appendChild(wrapper);
+    setTimeout(()=>scrollBot(), 30);
     scrollBot();
     return d;
 }
@@ -936,6 +943,7 @@ if(socket){
             const t=m>0?m+'m '+s+'s':s+'s';
             const el=chatbox.querySelector('[data-waiting]');
             if(el)el.textContent='Alocando parceiro compatível... ('+t+')';
+            scrollBot();
         },1000);
     });
 
