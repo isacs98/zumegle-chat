@@ -2,284 +2,514 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zuegle — Chat Anônimo Brasileiro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zuegle — Chat Anônimo e Rápido</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="description" content="O chat anônimo brasileiro. Encontre pessoas aleatórias para conversar agora.">
+    <meta name="description" content="O chat anônimo mais vibrante. Encontre pessoas aleatórias para conversar agora mesmo.">
     <meta property="og:title" content="Zuegle — Chat Anônimo Brasileiro">
-    <meta property="og:description" content="O chat anônimo brasileiro. Encontre pessoas aleatórias para conversar agora.">
-    <meta property="og:image" content="https://zumegle-chat.onrender.com/og-image.svg">
-    <meta property="og:url" content="https://zumegle-chat.onrender.com">
+    <meta property="og:description" content="A forma mais rápida de conhecer novas pessoas online, sem registros.">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Fontes Robustas: Poppins para impacto, Inter para interface/leitura -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?onload=onCaptchaLoaded&render=explicit" async defer></script>
+    
     <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
---blue:#2563eb;--blue-l:#3b82f6;--blue-d:#1d4ed8;
---orange:#f97316;--orange-l:#fb923c;
---bg:#f8fafc;--bg2:#ffffff;--bg3:#f1f5f9;
---border:#e2e8f0;--text:#0f172a;--text2:#475569;--text3:#94a3b8;
---sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
---sh-lg:0 8px 32px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.04);
---r:16px;--rs:10px}
-html.dark{
---bg:#0a0d14;--bg2:#111520;--bg3:#161b28;
---border:#1e2535;--text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
---sh:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.2);
---sh-lg:0 8px 32px rgba(0,0,0,.4)}
-body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);height:100dvh;display:flex;flex-direction:column;overflow:hidden;transition:background .3s,color .3s}
-.syne{font-family:"Syne",sans-serif}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+        /* RESET E VARIÁVEIS BASE */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            /* TEMA DARK (Padrão Principal) - Vibe Gaming/Social */
+            --bg-base: #09090b; /* Preto muito profundo */
+            --bg-surface: #18181b; /* Cinza escuro para cards */
+            --bg-surface-hover: #27272a;
+            
+            --brand-primary: #8b5cf6; /* Roxo Vibrante */
+            --brand-primary-hover: #7c3aed;
+            --brand-secondary: #06b6d4; /* Ciano Neon */
+            
+            --text-title: #ffffff;
+            --text-body: #a1a1aa;
+            --text-muted: #71717a;
+            
+            --border-color: #3f3f46;
+            --border-light: #27272a;
+            
+            --status-online: #10b981;
+            --status-danger: #ef4444;
+            --status-warning: #f59e0b;
+            
+            --shadow-brand: 0 8px 32px rgba(139, 92, 246, 0.25);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+            
+            --font-head: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-/* HEADER */
-#hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:20}
-.logo{display:flex;align-items:center;gap:9px}
-.logo-ic{width:32px;height:32px;background:linear-gradient(135deg,var(--blue-d),var(--blue-l));border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(37,99,235,.3)}
-.logo-tx{font-family:"Syne",sans-serif;font-size:21px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
-.logo-tx em{color:var(--orange);font-style:normal}
-.hdr-r{display:flex;align-items:center;gap:10px}
-.badge-on{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);padding:4px 11px;border-radius:99px;font-size:13px;font-weight:600;color:var(--text2)}
-.dot{width:7px;height:7px;background:#22c55e;border-radius:50%;position:relative}
-.dot::after{content:"";position:absolute;inset:-2px;background:#22c55e;border-radius:50%;opacity:.3;animation:ping 1.5s ease-in-out infinite}
-@keyframes ping{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.7);opacity:0}}
-.btn-th{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s}
-.btn-th:hover{background:var(--border);color:var(--text)}
+        html.light {
+            /* TEMA LIGHT - Clean, alto contraste */
+            --bg-base: #f4f4f5;
+            --bg-surface: #ffffff;
+            --bg-surface-hover: #f1f5f9;
+            
+            --brand-primary: #6d28d9;
+            --brand-primary-hover: #5b21b6;
+            --brand-secondary: #0891b2;
+            
+            --text-title: #09090b;
+            --text-body: #3f3f46;
+            --text-muted: #a1a1aa;
+            
+            --border-color: #e4e4e7;
+            --border-light: #f4f4f5;
+            
+            --shadow-brand: 0 8px 24px rgba(109, 40, 217, 0.2);
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
 
-/* AD */
-.ad{background:var(--bg3);border-bottom:1px solid var(--border);text-align:center;padding:6px;font-size:11px;color:var(--text3);flex-shrink:0}
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-base);
+            color: var(--text-body);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
 
-/* SCROLL */
-#scroll{flex-grow:1;overflow-y:auto;display:flex;flex-direction:column}
+        /* Padrão de fundo rico (Grelha visível nos dois temas) */
+        body::before {
+            content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+            background-image: linear-gradient(rgba(113, 113, 122, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(113, 113, 122, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px; 
+        }
 
-/* LANDING */
-#land{flex-grow:1;display:flex;flex-direction:column;align-items:center;padding:44px 20px 0}
-.hero{max-width:540px;width:100%;text-align:center;margin-bottom:36px}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.15);color:var(--blue-l);padding:4px 13px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:20px}
-html.dark .hero-badge{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.2)}
-.hero h1{font-family:"Syne",sans-serif;font-size:clamp(30px,5vw,50px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;color:var(--text);margin-bottom:14px}
-.grad{background:linear-gradient(135deg,var(--blue),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:16px;color:var(--text2);line-height:1.6}
-.age-b{display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15);color:#ef4444;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;margin-top:14px}
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; border: 2px solid var(--bg-base); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
 
-/* CARD */
-.card{max-width:500px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:28px;box-shadow:var(--sh-lg);margin-bottom:40px}
-.lbl{font-family:"Syne",sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:9px;display:flex;align-items:center;gap:6px}
-.lbl small{font-family:"DM Sans",sans-serif;font-weight:400;font-size:12px;color:var(--text3)}
-.inp-w{position:relative;margin-bottom:8px}
-.inp-ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--blue-l);pointer-events:none}
-#tags-input{width:100%;padding:12px 14px 12px 40px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
-#tags-input::placeholder{color:var(--text3)}
-#tags-input:focus{border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-.hint{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
-.btn-go{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;border:none;border-radius:var(--rs);font-family:"Syne",sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s;box-shadow:0 4px 16px rgba(37,99,235,.25);margin-top:22px;letter-spacing:.2px}
-.btn-go:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(37,99,235,.35)}
-.feats{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:22px;padding-top:20px;border-top:1px solid var(--border)}
-.feat{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2)}
-.feat-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+        /* HEADER SÓLIDO E DETALHADO */
+        #hdr {
+            background-color: var(--bg-surface);
+            border-bottom: 2px solid var(--border-light);
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; cursor: pointer; }
+        
+        /* Novo Ícone de Logo Detalhado */
+        .logo-ic {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-brand);
+            position: relative;
+            transform: rotate(-3deg);
+            transition: transform 0.3s;
+        }
+        .logo:hover .logo-ic { transform: rotate(0deg) scale(1.05); }
+        .logo-ic svg { fill: none; width: 24px; height: 24px; }
+        
+        /* Nome Estilizado e Unificado (Cor única) */
+        .logo-tx { 
+            font-family: var(--font-head); font-size: 26px; font-weight: 900; 
+            letter-spacing: -0.5px; color: var(--text-title); text-transform: uppercase;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+        
+        .hdr-r { display: flex; align-items: center; gap: 20px; }
+        
+        /* Badge de Status Robusto */
+        .badge-on {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 8px 18px; border-radius: 8px;
+            font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--status-online);
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .dot { width: 10px; height: 10px; background: var(--status-online); border-radius: 50%; box-shadow: 0 0 10px var(--status-online); }
+        
+        .btn-th {
+            width: 44px; height: 44px; border-radius: 10px; border: 2px solid var(--border-color);
+            background: var(--bg-base); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--text-body); transition: all 0.2s;
+        }
+        .btn-th:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
 
-/* DONATION */
-.don{max-width:500px;width:100%;text-align:center;margin-bottom:40px}
-.don h4{font-family:"Syne",sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
-.don p{font-size:13px;color:var(--text2);margin-bottom:14px}
-.btn-don{display:inline-flex;align-items:center;gap:7px;background:var(--bg2);border:1.5px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-don:hover{border-color:#22c55e;color:#22c55e}
+        /* SCROLL ÁREA PRINCIPAL */
+        #scroll { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; scroll-behavior: smooth; }
 
-/* FOOTER */
-#foot{background:var(--bg);border-top:1px solid var(--border);padding:16px 20px;margin-top:auto}
-.foot-links{display:flex;justify-content:center;flex-wrap:wrap;gap:2px 6px;margin-bottom:10px}
-.foot-links button{background:none;border:none;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .15s}
-.foot-links button:hover{color:var(--text);background:var(--bg3)}
-.foot-copy{text-align:center;font-size:11px;color:var(--text3)}
+        /* AD */
+        .ad { background: var(--bg-surface); text-align: center; padding: 12px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border-light); }
 
-/* MODALS */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);z-index:50;align-items:center;justify-content:center;padding:16px}
-.overlay.on{display:flex}
-.mbox{background:var(--bg2);border:1px solid var(--border);border-radius:20px;max-width:460px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--sh-lg);overflow:hidden}
-.mbox.wide{max-width:660px}
-.mhdr{padding:22px 22px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.mtitle{font-family:"Syne",sans-serif;font-size:19px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:9px}
-.mcls{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .15s}
-.mcls:hover{background:var(--border);color:var(--text)}
-.mdiv{height:1px;background:var(--border);margin:14px 22px;flex-shrink:0}
-.mbody{padding:0 22px;overflow-y:auto;flex-grow:1;color:var(--text2);font-size:14px;line-height:1.7}
-.mfoot{padding:14px 22px 22px;border-top:1px solid var(--border);flex-shrink:0;margin-top:14px}
-.t-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin:10px 0}
-.t-list li{display:flex;gap:11px;align-items:flex-start}
-.chk-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:14px;cursor:pointer}
-.chk-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;margin-top:2px}
-.chk-row span{font-size:13px;font-weight:500;color:var(--text2);line-height:1.5}
-.macts{display:flex;gap:9px;justify-content:flex-end}
-.btn-sec{padding:9px 18px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
-.btn-sec:hover{background:var(--border);color:var(--text)}
-.btn-pri{padding:9px 22px;background:linear-gradient(135deg,var(--blue-d),var(--blue));border:none;border-radius:var(--rs);font-family:"Syne",sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .15s;box-shadow:0 2px 8px rgba(37,99,235,.2)}
-.btn-pri:hover{box-shadow:0 4px 16px rgba(37,99,235,.3);transform:translateY(-1px)}
-.btn-pri:disabled{opacity:.45;cursor:not-allowed;transform:none}
+        /* LANDING PAGE - LAYOUT RICO E PREENCHIDO */
+        #land { display: flex; flex-direction: column; align-items: center; width: 100%; padding-bottom: 60px; }
+        
+        /* HERO SECTION COM IMAGEM */
+        .hero-section {
+            display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px;
+            max-width: 1200px; width: 100%; padding: 60px 32px;
+        }
+        
+        .hero-text { display: flex; flex-direction: column; align-items: flex-start; }
+        
+        .hero-tag {
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+            color: #fff; padding: 6px 16px; border-radius: 6px; font-family: var(--font-head);
+            font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 24px; box-shadow: var(--shadow-brand);
+        }
+        
+        .hero-text h1 {
+            font-family: var(--font-head); font-size: clamp(40px, 5vw, 68px); font-weight: 900;
+            line-height: 1.1; color: var(--text-title); margin-bottom: 24px; letter-spacing: -2px;
+        }
+        .hero-text p {
+            font-size: 18px; line-height: 1.6; color: var(--text-body); margin-bottom: 32px; max-width: 480px;
+        }
 
-/* CHAT */
-#chat{display:none;flex-grow:1;flex-direction:column;background:var(--bg);overflow:hidden}
-#chat.on{display:flex}
-#chatbox{flex-grow:1;overflow-y:auto;padding:18px 18px 6px;display:flex;flex-direction:column;gap:3px}
-.sys{font-size:13px;font-weight:500;color:var(--text3);text-align:center;padding:5px 0}
-.sys.alert{color:#ef4444}
-.mrow{display:flex;flex-direction:column;gap:2px;max-width:70%;animation:mi .15s ease-out}
-@keyframes mi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.mrow.you{align-self:flex-end;align-items:flex-end}
-.mrow.str{align-self:flex-start;align-items:flex-start}
-.mlbl{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:0 3px}
-.mrow.you .mlbl{color:var(--blue-l)}
-.mrow.str .mlbl{color:var(--orange)}
-.mbub{padding:9px 13px;border-radius:15px;font-size:15px;line-height:1.5;word-break:break-word;max-width:100%}
-.mrow.you .mbub{background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;border-bottom-right-radius:3px}
-.mrow.str .mbub{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px}
-#typing{display:none;align-items:center;gap:7px;padding:6px 18px;font-size:12px;color:var(--text3);font-style:italic}
-#typing.on{display:flex}
-.tdots{display:flex;gap:3px}
-.tdots span{width:4px;height:4px;background:var(--text3);border-radius:50%;animation:tb 1.2s ease-in-out infinite}
-.tdots span:nth-child(2){animation-delay:.2s}
-.tdots span:nth-child(3){animation-delay:.4s}
-@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-#bar{padding:10px 14px;background:var(--bg2);border-top:1px solid var(--border);display:flex;gap:7px;align-items:flex-end;flex-shrink:0}
-.btn-stop-c{padding:9px 14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);font-family:"Syne",sans-serif;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
-.btn-stop-c:hover{background:var(--border);color:var(--text)}
-.btn-stop-c.nc{color:var(--blue-l);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.06)}
-.inpw{flex-grow:1;position:relative}
-#msg{width:100%;padding:9px 13px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:15px;color:var(--text);resize:none;outline:none;max-height:110px;line-height:1.5;transition:border-color .2s,box-shadow .2s}
-#msg::placeholder{color:var(--text3)}
-#msg:focus{border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-#msg:disabled{opacity:.45;cursor:not-allowed}
-#cc{position:absolute;bottom:5px;right:9px;font-size:11px;color:var(--text3);pointer-events:none;display:none}
-.btn-send-c{width:40px;height:40px;background:linear-gradient(135deg,var(--blue-d),var(--blue));border:none;border-radius:var(--rs);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;box-shadow:0 2px 8px rgba(37,99,235,.25)}
-.btn-send-c:hover{box-shadow:0 4px 14px rgba(37,99,235,.35);transform:translateY(-1px)}
-.btn-send-c:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-rep{width:40px;height:40px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--rs);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.btn-rep:hover{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4)}
-.btn-rep:disabled{opacity:.4;cursor:not-allowed}
-@media(max-width:480px){#land{padding:24px 14px 0}.card{padding:20px}.hero h1{letter-spacing:-1px}.mrow{max-width:86%}}
+        /* Imagem Rica no Hero (Pessoas a conversar) */
+        .hero-visual {
+            position: relative; width: 100%; height: 450px; border-radius: 24px;
+            overflow: hidden; box-shadow: var(--shadow-card);
+            border: 4px solid var(--bg-surface);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.5s;
+        }
+        .hero-visual:hover { transform: perspective(1000px) rotateY(0deg); }
+        .hero-visual img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-visual::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, var(--bg-base) 0%, transparent 50%);
+            opacity: 0.8;
+        }
+
+        /* ÁREA DE AÇÃO (FORMULÁRIO SÓLIDO) */
+        .action-area {
+            max-width: 800px; width: 100%; background: var(--bg-surface);
+            border: 2px solid var(--border-color); border-radius: 20px;
+            padding: 40px; box-shadow: var(--shadow-card);
+            margin-top: -40px; z-index: 10; position: relative;
+        }
+        
+        .lbl { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text-title); margin-bottom: 16px; }
+        .lbl small { font-family: var(--font-body); font-weight: 400; color: var(--text-muted); font-size: 14px; margin-left: 8px; }
+        
+        .inp-w { position: relative; margin-bottom: 16px; }
+        .inp-ic { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        #tags-input {
+            width: 100%; padding: 20px 20px 20px 56px;
+            background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px;
+            font-family: var(--font-body); font-size: 16px; font-weight: 500; color: var(--text-title);
+            outline: none; transition: all 0.2s;
+        }
+        #tags-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
+        
+        .btn-go {
+            width: 100%; padding: 20px; margin-top: 24px;
+            background: var(--brand-primary); color: #fff; border: none; border-radius: 12px;
+            font-family: var(--font-head); font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+            transition: all 0.3s; box-shadow: var(--shadow-brand);
+        }
+        .btn-go:hover { background: var(--brand-primary-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4); }
+
+        /* NOVA SECÇÃO: INFORMAÇÕES DETALHADAS */
+        .info-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+            max-width: 1200px; width: 100%; padding: 80px 32px;
+        }
+        .info-card { background: var(--bg-surface); padding: 32px; border-radius: 16px; border: 1px solid var(--border-light); }
+        .info-ic { width: 56px; height: 56px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--brand-primary); margin-bottom: 24px; }
+        .info-card h3 { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--text-title); margin-bottom: 12px; }
+        .info-card p { font-size: 15px; line-height: 1.6; color: var(--text-body); }
+
+        /* RODAPÉ ESTRUTURADO */
+        #foot { background: var(--bg-surface); border-top: 2px solid var(--border-color); padding: 60px 32px 32px; margin-top: auto; }
+        .foot-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 32px; }
+        .don-box { text-align: center; background: var(--bg-base); padding: 32px; border-radius: 16px; width: 100%; max-width: 600px; border: 1px dashed var(--border-color); }
+        .don-box h4 { font-family: var(--font-head); font-size: 20px; color: var(--text-title); margin-bottom: 8px; }
+        .btn-don { margin-top: 16px; padding: 12px 24px; background: var(--text-title); color: var(--bg-base); border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-don:hover { opacity: 0.9; transform: scale(1.05); }
+        .foot-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
+        .foot-links button { background: none; border: none; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-body); cursor: pointer; transition: color 0.2s; }
+        .foot-links button:hover { color: var(--brand-primary); }
+        .foot-copy { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+        /* MODAIS SÓLIDOS */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .overlay.on { display: flex; animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .mbox { background: var(--bg-surface); border: 2px solid var(--border-color); border-radius: 16px; max-width: 560px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
+        .mbox.wide { max-width: 800px; }
+        
+        .mhdr { padding: 32px 32px 24px; border-bottom: 2px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+        .mtitle { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--text-title); display: flex; align-items: center; gap: 12px; }
+        .mcls { width: 40px; height: 40px; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-base); cursor: pointer; color: var(--text-muted); font-weight: bold; font-size: 18px; transition: 0.2s; }
+        .mcls:hover { background: var(--status-danger); color: #fff; border-color: var(--status-danger); }
+        
+        .mbody { padding: 32px; overflow-y: auto; color: var(--text-body); font-size: 15px; line-height: 1.6; }
+        .mfoot { padding: 24px 32px; border-top: 2px solid var(--border-light); background: var(--bg-base); display: flex; flex-direction: column; gap: 20px; border-radius: 0 0 14px 14px; }
+        
+        .t-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+        .t-list li { display: flex; gap: 16px; align-items: flex-start; background: var(--bg-base); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .t-list li strong { display: block; color: var(--text-title); font-size: 16px; margin-bottom: 4px; font-family: var(--font-head); }
+        
+        .chk-row { display: flex; align-items: center; gap: 12px; cursor: pointer; background: var(--bg-surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .chk-row input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--brand-primary); cursor: pointer; }
+        .chk-row span { font-size: 15px; font-weight: 600; color: var(--text-title); }
+        
+        .macts { display: flex; gap: 16px; justify-content: flex-end; }
+        .btn-sec, .btn-pri { padding: 14px 28px; border-radius: 8px; font-family: var(--font-head); font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .btn-sec { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); }
+        .btn-sec:hover { background: var(--border-color); }
+        .btn-pri { background: var(--brand-primary); border: none; color: #fff; }
+        .btn-pri:hover:not(:disabled) { background: var(--brand-primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-brand); }
+        .btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* INTERFACE DE CHAT ROBUSTA (Estilo Discord/Twitch) */
+        #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); }
+        #chat.on { display: flex; }
+        
+        /* Cabeçalho Interno do Chat */
+        .chat-header {
+            background: var(--bg-surface); padding: 16px 32px; border-bottom: 2px solid var(--border-color);
+            display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+        }
+        .chat-header h2 { font-family: var(--font-head); font-size: 18px; color: var(--text-title); }
+        .chat-header .status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--status-online); }
+        
+        #chatbox { flex-grow: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .sys { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--text-muted); text-align: center; padding: 8px 16px; background: var(--bg-surface); border-radius: 8px; align-self: center; text-transform: uppercase; letter-spacing: 1px; }
+        .sys.alert { color: var(--status-danger); border: 1px solid rgba(239,68,68,0.3); }
+        
+        .mrow { display: flex; flex-direction: column; gap: 6px; max-width: 85%; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .mrow.you { align-self: flex-end; align-items: flex-end; }
+        .mrow.str { align-self: flex-start; align-items: flex-start; }
+        
+        /* Nomes acima das bolhas */
+        .mlbl { font-family: var(--font-head); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; }
+        .mrow.you .mlbl { color: var(--brand-primary); }
+        .mrow.str .mlbl { color: var(--brand-secondary); }
+        
+        .mbub { padding: 16px 20px; border-radius: 12px; font-size: 16px; line-height: 1.6; font-weight: 500; }
+        .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-right-radius: 0; }
+        .mrow.str .mbub { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); border-bottom-left-radius: 0; }
+        
+        #typing { display: none; align-self: flex-start; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 12px 20px; border-radius: 12px; border: 2px solid var(--border-color); }
+        #typing.on { display: flex; }
+        .tdots span { display: inline-block; width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; margin: 0 2px; animation: bounce 1s infinite; }
+        .tdots span:nth-child(2) { animation-delay: 0.2s; }
+        .tdots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); background: var(--brand-primary); } }
+
+        /* BARRA DE MENSAGENS ESTRUTURADA */
+        #bar { padding: 24px 32px; background: var(--bg-surface); border-top: 2px solid var(--border-color); display: flex; gap: 16px; align-items: flex-end; }
+        
+        .btn-stop-c { padding: 0 24px; height: 56px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text-title); cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .btn-stop-c:hover { border-color: var(--status-danger); color: var(--status-danger); }
+        .btn-stop-c.nc { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+        .btn-stop-c.nc:hover { background: var(--brand-primary-hover); }
+        
+        .inpw { flex-grow: 1; position: relative; }
+        #msg { width: 100%; padding: 16px 70px 16px 20px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-body); font-size: 16px; color: var(--text-title); resize: none; outline: none; max-height: 150px; line-height: 1.5; transition: border-color 0.2s; }
+        #msg:focus { border-color: var(--brand-primary); }
+        #msg:disabled { opacity: 0.5; background: var(--border-light); cursor: not-allowed; }
+        #cc { position: absolute; bottom: -22px; right: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); display: none; }
+        
+        .btn-send-c { position: absolute; right: 8px; bottom: 8px; width: 40px; height: 40px; background: var(--brand-primary); border: none; border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-send-c:hover:not(:disabled) { background: var(--brand-primary-hover); transform: scale(1.05); }
+        .btn-send-c:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+        
+        .btn-rep { width: 56px; height: 56px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
+        .btn-rep:hover:not(:disabled) { border-color: var(--status-danger); color: var(--status-danger); background: rgba(239, 68, 68, 0.1); }
+        .btn-rep:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        @media (max-width: 1000px) {
+            .hero-section { grid-template-columns: 1fr; text-align: center; padding: 40px 24px; gap: 32px; }
+            .hero-text { align-items: center; }
+            .hero-visual { height: 350px; transform: none; }
+            .info-grid { grid-template-columns: 1fr; }
+            .action-area { margin-top: 0; border-radius: 0; border-left: none; border-right: none; border-bottom: none; }
+        }
+
+        @media (max-width: 600px) {
+            #hdr { padding: 0 16px; height: 64px; }
+            .hero-text h1 { font-size: 36px; }
+            .action-area { padding: 32px 20px; }
+            #chatbox { padding: 20px 16px; }
+            #bar { padding: 16px; gap: 10px; flex-wrap: wrap; }
+            .inpw { order: -1; width: 100%; }
+            .btn-stop-c { flex: 1; height: 48px; }
+            .btn-rep { height: 48px; width: 48px; }
+            .mrow { max-width: 90%; }
+        }
     </style>
 </head>
-<body>
+<body class="dark">
 
 <!-- HEADER -->
 <header id="hdr">
-    <div class="logo">
+    <a href="/" class="logo">
         <div class="logo-ic">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.6382 20 9.34757 19.721 8.18841 19.2218L3 21L4.7782 15.8116C4.279 14.6524 4 13.3618 4 12C4 7.02944 8.02944 3 13 3C17.9706 3 21 7.02944 21 11.5Z"/>
+                <path d="M9 9L15 9L9 15L15 15"/>
+            </svg>
         </div>
-        <span class="logo-tx">Zue<em>gle</em></span>
-    </div>
+        <span class="logo-tx">Zuegle</span>
+    </a>
     <div class="hdr-r">
-        <button class="btn-th" onclick="toggleTheme()">
-            <svg id="ic-sun" style="display:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            <svg id="ic-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <div class="badge-on"><div class="dot"></div><span id="oc">0</span> ONLINE</div>
+        <button class="btn-th" onclick="toggleTheme()" aria-label="Mudar Tema">
+            <svg id="ic-sun" style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="ic-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <div class="badge-on"><div class="dot"></div><span id="oc">0</span> online</div>
     </div>
 </header>
 
-<!-- AD -->
-<div class="ad">Espaço Publicitário — Insira o seu código do Google AdSense aqui</div>
+<!-- AD BAR -->
+<div class="ad">Espaço Publicitário — Otimize a sua campanha do Google AdSense aqui</div>
 
-<!-- SCROLL -->
+<!-- SCROLL CONTAINER PRINCIPAL -->
 <div id="scroll">
 
-    <!-- LANDING -->
     <main id="land">
-        <div class="hero">
-            <div class="hero-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                100% Anônimo · Sem Registro
+        <!-- HERO SECTION COM IMAGEM -->
+        <section class="hero-section">
+            <div class="hero-text">
+                <div class="hero-tag">Comunidade Aberta</div>
+                <h1>O Chat Anônimo Mais Vibrante do Brasil.</h1>
+                <p>Junte-se a milhares de usuários agora mesmo. Sem perfis, sem barreiras. Apenas conversas reais, rápidas e totalmente seguras.</p>
             </div>
-            <h1>Encontre alguém<br>para <span class="grad">conversar agora</span></h1>
-            <p>Conectamos você instantaneamente a pessoas do mundo inteiro. Sem rastros, sem perfis.</p>
-            <div class="age-b">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Plataforma restrita a maiores de 18 anos
+            <div class="hero-visual">
+                <!-- Imagem rica representando o lado social/jovem da plataforma -->
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Grupo de jovens conversando e sorrindo">
             </div>
-        </div>
+        </section>
 
-        <div class="card">
-            <div class="lbl">Interesses <small>(opcional)</small></div>
+        <!-- FORMULÁRIO SÓLIDO (ACTION AREA) -->
+        <section class="action-area">
+            <div class="lbl">De que quer falar hoje? <small>(Opcional, mas recomendado)</small></div>
             <div class="inp-w">
-                <svg class="inp-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                <input type="text" id="tags-input" placeholder="Ex: música, animes, games, viagens...">
+                <svg class="inp-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <input type="text" id="tags-input" placeholder="Ex: anime, programação, música, esportes...">
             </div>
-            <p class="hint">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                Separe por vírgulas. Tentamos conectar por afinidade.
-            </p>
+            
             <button class="btn-go" onclick="openTermsModal()">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                Iniciar Chat de Texto
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Entrar no Bate-Papo
             </button>
-            <div class="feats">
-                <div class="feat"><div class="feat-ic" style="background:rgba(37,99,235,.08)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue-l)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>100% Anônimo</div>
-                <div class="feat"><div class="feat-ic" style="background:rgba(249,115,22,.08)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>Conexão Imediata</div>
-                <div class="feat"><div class="feat-ic" style="background:rgba(34,197,94,.08)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>Sem Registro</div>
-            </div>
-        </div>
+        </section>
 
-        <div class="don">
-            <h4>Gosta do Zuegle? ❤️</h4>
-            <p>Apoie o projeto para manter os servidores rápidos e seguros.</p>
-            <button class="btn-don">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Apoiar via PIX / PayPal
-            </button>
-        </div>
+        <!-- GRID DE INFORMAÇÕES DETALHADAS -->
+        <section class="info-grid">
+            <div class="info-card">
+                <div class="info-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <h3>Privacidade Máxima</h3>
+                <p>Acreditamos no anonimato real. Não armazenamos históricos de chat em bases de dados. Fechou a janela, a conversa desaparece para sempre.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                <h3>Conexões Inteligentes</h3>
+                <p>Nosso sistema trabalha continuamente para encontrar o melhor par para você. Utilize as tags de interesses para se conectar com pessoas que curtem as mesmas coisas.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <h3>Comunidade Vigiada</h3>
+                <p>Apesar de anônimo, o Zuegle não é terra sem lei. Prezamos pelo respeito mútuo para garantir que a experiência seja sempre agradável, livre de toxicidade e segura para todos.</p>
+            </div>
+        </section>
+
     </main>
 
+    <!-- RODAPÉ ESTRUTURADO -->
     <footer id="foot">
-        <div class="foot-links">
-            <button onclick="openInfoModal('faqs')">FAQs</button>
-            <button onclick="openInfoModal('rules')">Rules</button>
-            <button onclick="openInfoModal('support')">Support</button>
-            <button onclick="openInfoModal('terms')">Terms</button>
-            <button onclick="openInfoModal('privacy')">Privacy</button>
-            <button onclick="openInfoModal('legal')">Legal</button>
+        <div class="foot-content">
+            <div class="don-box">
+                <h4>Apoie os Servidores 🚀</h4>
+                <p style="color:var(--text-body); font-size:15px">Manter a infraestrutura rápida e segura custa caro. Se você gosta do projeto, considere apoiar o nosso trabalho.</p>
+                <button class="btn-don">Contribuir com o Projeto</button>
+            </div>
+            
+            <div class="foot-links">
+                <button onclick="openInfoModal('faqs')">Perguntas Frequentes</button>
+                <button onclick="openInfoModal('rules')">Regras da Comunidade</button>
+                <button onclick="openInfoModal('support')">Suporte Técnico</button>
+                <button onclick="openInfoModal('terms')">Termos Legais</button>
+                <button onclick="openInfoModal('privacy')">Privacidade</button>
+            </div>
+            
+            <div class="foot-copy">© Zuegle Inc. 2026. Desenvolvido para a Comunidade Brasileira.</div>
         </div>
-        <div class="foot-copy">© Zuegle Inc. 2026</div>
     </footer>
 </div>
 
-<!-- TERMS MODAL -->
+<!-- MODAL DE TERMOS (Acordo de Uso Atualizado) -->
 <div id="terms-modal" class="overlay">
     <div class="mbox">
         <div class="mhdr">
-            <div class="mtitle"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--blue-l)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Acordo de Segurança</div>
+            <div class="mtitle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--status-warning)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Acordo de Uso</div>
+            <button class="mcls" onclick="closeTermsModal()">✕</button>
         </div>
-        <div class="mdiv"></div>
         <div class="mbody">
-            <p style="font-size:13px;margin-bottom:14px">Ao acessar o Zuegle, você assume um compromisso legal com estas diretrizes.</p>
+            <p style="margin-bottom:24px; font-size: 15px;">Ao acessar o Zuegle, você assume um compromisso legal com as presentes diretrizes. O descumprimento de qualquer cláusula resultará na interrupção imediata do acesso à plataforma.</p>
             <ul class="t-list">
-                <li><span style="color:#ef4444;flex-shrink:0;margin-top:1px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div><strong style="color:var(--text)">Maioridade (18+):</strong> Você declara ter 18 anos ou mais.</div></li>
-                <li><span style="color:#ef4444;flex-shrink:0;margin-top:1px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg></span><div><strong style="color:var(--text)">Zero Ilegalidades:</strong> Proibido conteúdo ilegal de qualquer tipo.</div></li>
-                <li><span style="color:var(--blue-l);flex-shrink:0;margin-top:1px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div><strong style="color:var(--text)">Respeito:</strong> Sem assédio, racismo, homofobia ou bullying.</div></li>
-                <li><span style="color:var(--blue-l);flex-shrink:0;margin-top:1px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><div><strong style="color:var(--text)">Sem Spam:</strong> Proibida venda, links e redes sociais.</div></li>
+                <li>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--status-danger)" stroke-width="2.5" style="flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <div><strong>Maioridade Obrigatória (18+)</strong> Você declara, sob responsabilidade legal, ter 18 anos de idade completos ou mais. O acesso por menores de idade é estritamente proibido e configura violação grave dos nossos Termos de Serviço.</div>
+                </li>
+                <li>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                    <div><strong>Tolerância Zero para Conteúdo Ilegal</strong> É terminantemente proibida a partilha, incentivo ou menção a qualquer conteúdo de natureza ilegal, incluindo mas não se limitando a: tráfico de drogas ou armas, exploração sexual infantil, terrorismo, extorsão e lavagem de dinheiro. Cooperamos ativamente com autoridades competentes.</div>
+                </li>
+                <li>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--brand-secondary)" stroke-width="2.5" style="flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <div><strong>Conduta e Respeito</strong> Não toleramos qualquer forma de assédio, racismo, homofobia, transfobia, misoginia, bullying, ameaças ou discurso de ódio de qualquer natureza.</div>
+                </li>
+                <li>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <div><strong>Proibição Comercial e Spam</strong> É proibida a divulgação de serviços, venda de produtos, compartilhamento de redes sociais, links externos ou qualquer forma de publicidade não autorizada.</div>
+                </li>
             </ul>
         </div>
         <div class="mfoot">
-            <label class="chk-row"><input type="checkbox" id="agree-checkbox"><span>Li e concordo com os Termos e confirmo ter 18 anos ou mais.</span></label>
+            <label class="chk-row">
+                <input type="checkbox" id="agree-checkbox">
+                <span>Compreendi e aceito os Termos e Políticas do Zuegle.</span>
+            </label>
             <div class="macts">
                 <button class="btn-sec" onclick="closeTermsModal()">Cancelar</button>
-                <button class="btn-pri" id="btn-start-chat" onclick="acceptTermsAndStart()" disabled>Concordar e Entrar</button>
+                <button class="btn-pri" id="btn-start-chat" onclick="acceptTermsAndStart()" disabled>Iniciar Conexão</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- INFO MODAL -->
+<!-- INFO MODAL (Para páginas do Footer) -->
 <div id="info-modal" class="overlay">
     <div class="mbox wide">
         <div class="mhdr">
             <div class="mtitle" id="info-modal-title">Título</div>
-            <button class="mcls" onclick="closeInfoModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <button class="mcls" onclick="closeInfoModal()">✕</button>
         </div>
-        <div class="mdiv"></div>
         <div class="mbody" id="info-modal-content"></div>
         <div class="mfoot"><div class="macts"><button class="btn-pri" onclick="closeInfoModal()">Fechar</button></div></div>
     </div>
@@ -287,36 +517,51 @@ html.dark .hero-badge{background:rgba(59,130,246,.1);border-color:rgba(59,130,24
 
 <!-- CAPTCHA MODAL -->
 <div id="spam-captcha-modal" class="overlay">
-    <div class="mbox" style="max-width:340px;text-align:center">
-        <div style="padding:28px 22px 0">
-            <div style="width:52px;height:52px;background:rgba(37,99,235,.08);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--blue-l)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div class="mtitle" style="justify-content:center;margin-bottom:7px;font-size:18px">Verificação</div>
-            <p style="font-size:13px;color:var(--text2)">Detectamos atividade incomum. Conclua a verificação.</p>
+    <div class="mbox" style="max-width:440px;">
+        <div class="mhdr" style="justify-content:center; flex-direction:column; gap:16px; border-bottom:none; padding-bottom:0">
+            <div style="width:64px; height:64px; background:var(--bg-surface); border:2px solid var(--border-color); border-radius:16px; display:flex; align-items:center; justify-content:center; color:var(--text-title);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h2 style="font-family:var(--font-head); font-size:24px; color:var(--text-title);">Controle de Segurança</h2>
+            <p style="font-size:15px; color:var(--text-body); text-align:center;">Verifique que não é um robô para proteger a comunidade.</p>
         </div>
-        <div class="mdiv"></div>
-        <div style="padding:0 22px;display:flex;justify-content:center;min-height:74px"><div id="recaptcha-container"></div></div>
-        <div class="mfoot" style="text-align:center;border-top:none"><button onclick="cancelSpamCaptcha()" style="background:none;border:none;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer">Cancelar</button></div>
+        <div style="padding:32px; display:flex; justify-content:center;"><div id="recaptcha-container"></div></div>
+        <div class="mfoot" style="background:transparent; border:none; padding-top:0;">
+            <button onclick="cancelSpamCaptcha()" class="btn-sec" style="width:100%">Cancelar Operação</button>
+        </div>
     </div>
 </div>
 
-<!-- CHAT -->
+<!-- INTERFACE DE CHAT PRINCIPAL -->
 <main id="chat">
-    <div id="chatbox"></div>
-    <div id="typing">
-        <div class="tdots"><span></span><span></span><span></span></div>
-        Estranho digitando...
+    <div class="chat-header">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h2>Sessão Ativa</h2>
+        <div style="margin-left:auto" class="status"><div class="dot"></div> Protegido</div>
     </div>
+    
+    <div id="chatbox"></div>
+    
+    <!-- Bolha de Digitação Estilizada -->
+    <div style="padding: 0 32px">
+        <div id="typing">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            O Parceiro está digitando
+            <div class="tdots"><span></span><span></span><span></span></div>
+        </div>
+    </div>
+    
     <div id="bar">
         <button id="btn-stop" class="btn-stop-c" onclick="handleStopButton()">Parar</button>
         <div class="inpw">
-            <textarea id="msg" maxlength="500" rows="1" placeholder="Digite uma mensagem..." onkeydown="handleEnter(event)" disabled></textarea>
+            <textarea id="msg" maxlength="500" rows="1" placeholder="Digite a sua mensagem aqui..." onkeydown="handleEnter(event)" disabled></textarea>
             <span id="cc"></span>
+            <button id="btn-send" class="btn-send-c" onclick="sendMessage()" disabled>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
         </div>
-        <button id="btn-send" class="btn-send-c" onclick="sendMessage()" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-        <button id="btn-report" class="btn-rep" onclick="handleReport()" disabled title="Reportar">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <button id="btn-report" class="btn-rep" onclick="handleReport()" disabled title="Denunciar Usuário">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
     </div>
 </main>
@@ -325,25 +570,233 @@ html.dark .hero-badge{background:rgba(59,130,246,.1);border-color:rgba(59,130,24
 <script>
 // TEMA
 function applyTheme(t){
-    document.documentElement.classList.toggle('dark',t==='dark');
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(t);
     document.getElementById('ic-sun').style.display=t==='dark'?'block':'none';
     document.getElementById('ic-moon').style.display=t==='dark'?'none':'block';
 }
 function toggleTheme(){
-    const t=localStorage.getItem('theme')==='dark'?'light':'dark';
+    const t=document.documentElement.classList.contains('dark')?'light':'dark';
     localStorage.setItem('theme',t);applyTheme(t);
 }
-const savedTheme=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+// Modo Escuro como padrão
+const savedTheme=localStorage.getItem('theme') || 'dark';
 applyTheme(savedTheme);
 
-// FOOTER MODALS
+// FOOTER MODALS - Toda a documentação inserida e estilizada com o Design System
 const footerContent={
-    faqs:{title:'Perguntas Frequentes (FAQs)',content:'<div style="display:flex;flex-direction:column;gap:18px"><div><h3 style="font-weight:800;font-size:16px;margin-bottom:7px;color:var(--blue-l)">1. O que é o Zuegle?</h3><p>Plataforma de chat anônimo que conecta usuários aleatoriamente para conversas de texto.</p></div><div><h3 style="font-weight:800;font-size:16px;margin-bottom:7px;color:var(--blue-l)">2. É gratuito?</h3><p>Sim, 100% gratuito e sem registro.</p></div><div><h3 style="font-weight:800;font-size:16px;margin-bottom:7px;color:var(--blue-l)">3. Como funcionam os Interesses?</h3><p>Inserindo tags, o sistema tenta conectar você a alguém com gostos similares. Sem correspondência, a conexão é aleatória.</p></div><div><h3 style="font-weight:800;font-size:16px;margin-bottom:7px;color:var(--blue-l)">4. Mensagens são guardadas?</h3><p>Não. As mensagens existem apenas em memória durante o envio e desaparecem ao encerrar a conversa.</p></div><div><h3 style="font-weight:800;font-size:16px;margin-bottom:7px;color:var(--blue-l)">5. Como reportar abusos?</h3><p>Use o botão Reportar na tela de chat. A conexão é encerrada e o usuário marcado automaticamente.</p></div></div>'},
-    rules:{title:'Regras de Conduta (Rules)',content:'<div style="display:flex;flex-direction:column;gap:16px"><div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15);padding:14px;border-radius:11px"><strong style="color:#ef4444">Tolerância Zero</strong><p style="margin-top:5px;font-size:13px;color:#ef4444">Violações resultam em banimento imediato.</p></div><div><h4 style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">1. Maioridade (18+)</h4><p>Acesso por menores é estritamente proibido.</p></div><div><h4 style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">2. Sem Conteúdo Ilegal</h4><p>Drogas, armas, exploração infantil e terrorismo são proibidos e reportados às autoridades.</p></div><div><h4 style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">3. Respeito Mútuo</h4><p>Proibidos racismo, homofobia, bullying e doxxing.</p></div><div><h4 style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">4. Sem Spam</h4><p>Proibida divulgação de redes sociais, links e serviços.</p></div></div>'},
-    support:{title:'Apoio ao Usuário (Support)',content:'<div style="display:flex;flex-direction:column;gap:16px"><p>A equipe do Zuegle dedica-se a garantir a melhor experiência possível.</p><div style="background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.12);padding:18px;border-radius:12px"><h3 style="font-weight:700;margin-bottom:12px;color:var(--blue-l)">Contatos Oficiais</h3><div style="display:flex;flex-direction:column;gap:8px;font-size:14px"><div><strong>Suporte Geral:</strong> <a href="mailto:suporte@zuegle.com" style="color:var(--blue-l)">suporte@zuegle.com</a></div><div><strong>Crimes:</strong> <a href="mailto:safety@zuegle.com" style="color:#ef4444">safety@zuegle.com</a></div></div></div><div><h4 style="font-weight:700;margin-bottom:7px;color:var(--text)">Apelações</h4><p>Banimentos são aplicados automaticamente. Apelações aceitas em até 72h, raramente revertidas.</p></div></div>'},
-    terms:{title:'Termos de Serviço (Terms)',content:'<div style="display:flex;flex-direction:column;gap:16px"><p style="font-size:12px;background:var(--bg3);padding:10px;border-radius:9px;border:1px solid var(--border)">Última revisão: 21 de Março de 2026.</p><div><h3 style="font-weight:700;margin-bottom:5px;color:var(--text)">Cláusula 1</h3><p>Este acordo rege o acesso ao Zuegle, ferramenta de encaminhamento de rede em tempo real.</p></div><div><h3 style="font-weight:700;margin-bottom:5px;color:var(--text)">Cláusula 2</h3><p>Licença limitada, não exclusiva e revogável para uso pessoal. Proibido engenharia reversa e scraping.</p></div><div><h3 style="font-weight:700;margin-bottom:5px;color:var(--text)">Cláusula 3</h3><p>O Zuegle atua como transmissor neutro. Não moderamos conteúdo proativamente.</p></div><div><h3 style="font-weight:700;margin-bottom:5px;color:var(--text)">Cláusula 4</h3><p>Reservamo-nos o direito de recusar acesso sem aviso prévio.</p></div></div>'},
-    privacy:{title:'Política de Privacidade (Privacy)',content:'<div style="display:flex;flex-direction:column;gap:16px"><p>O Zuegle está comprometido com a minimização de dados.</p><div style="background:var(--bg3);border:1px solid var(--border);padding:14px;border-radius:11px"><h3 style="font-weight:700;margin-bottom:7px;color:var(--blue-l)">Mensagens</h3><p style="font-size:13px">Não registramos nem armazenamos mensagens. Existem apenas na RAM durante o encaminhamento.</p></div><div style="background:var(--bg3);border:1px solid var(--border);padding:14px;border-radius:11px"><h3 style="font-weight:700;margin-bottom:7px;color:var(--blue-l)">Endereços IP</h3><p style="font-size:13px">IPs são verificados para segurança. Se banido, o IP fica em lista de bloqueio. Sem isso, é removido ao sair.</p></div><div style="background:var(--bg3);border:1px solid var(--border);padding:14px;border-radius:11px"><h3 style="font-weight:700;margin-bottom:7px;color:var(--blue-l)">Autoridades</h3><p style="font-size:13px">Em casos de crimes graves, compartilhamos metadados de acesso com autoridades competentes.</p></div></div>'},
-    legal:{title:'Legal e Jurisdição (Legal)',content:'<div style="display:flex;flex-direction:column;gap:16px"><div><h3 style="font-weight:700;margin-bottom:7px;color:var(--text)">Propriedade Intelectual</h3><p>O código, logotipo e design do Zuegle são patrimônio exclusivo da Zuegle Inc. Cópias não autorizadas resultarão em ação legal.</p></div><div><h3 style="font-weight:700;margin-bottom:7px;color:var(--text)">DMCA</h3><p>Para notificações de violação de direitos autorais: <a href="mailto:legal@zuegle.com" style="color:var(--blue-l)">legal@zuegle.com</a></p></div><div><h3 style="font-weight:700;margin-bottom:7px;color:var(--text)">Divisibilidade</h3><p>Se qualquer cláusula for declarada inválida, as demais permanecem em vigor.</p></div></div>'}
+    faqs: {
+        title: 'Perguntas Frequentes (FAQs)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:24px">
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">1. O que é o Zuegle?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma brasileira de chat anônimo e aleatório em tempo real. Nossa tecnologia conecta dois usuários desconhecidos instantaneamente para uma conversa privada de texto. Não existe perfil, histórico ou identidade — apenas você e um estranho do outro lado.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">2. Preciso criar uma conta?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Não. O Zuegle não exige cadastro, e-mail, número de telefone ou qualquer forma de registro. Basta acessar o site, concordar com os Termos de Uso e iniciar o chat imediatamente.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">3. Como funciona o sistema de interesses?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Antes de iniciar, você pode digitar palavras-chave separadas por vírgula como "música, games, animes". Nosso sistema tenta conectar você a outro usuário que digitou interesses em comum. Caso não encontre ninguém compatível em tempo hábil, conectamos com qualquer pessoa disponível para evitar espera prolongada.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">4. As minhas mensagens são salvas?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Não. O Zuegle opera com política de zero armazenamento de conversas. Quando a conversa termina, ela desaparece permanentemente — não existe forma alguma de recuperá-la.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">5. O Zuegle é seguro?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Possuímos múltiplas camadas de proteção que operam de forma contínua e silenciosa para manter a plataforma segura. Recomendamos ainda que nunca compartilhe dados pessoais como nome completo, endereço, telefone ou informações financeiras com estranhos.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">6. O que fazer se encontrar um usuário abusivo?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Clique imediatamente no botão Reportar na tela de chat. Isso encerra a conversa e aciona nossos sistemas de moderação automaticamente. Múltiplas denúncias contra o mesmo usuário resultam em bloqueio permanente.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">7. Por que fui bloqueado?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Bloqueios são aplicados pelo nosso sistema de moderação automática quando detectamos violações dos Termos de Serviço. Caso acredite que foi bloqueado por engano, entre em contato pelo e-mail appeals@zuegle.com</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">8. O site é gratuito?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Sim, completamente. O Zuegle não possui planos pagos, funcionalidades premium ou cobranças ocultas. Nos sustentamos através de publicidade não intrusiva e doações voluntárias da comunidade.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">9. Posso usar no celular?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Sim. O Zuegle foi desenvolvido com design responsivo e funciona perfeitamente em smartphones e tablets nos principais navegadores modernos.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">10. Por que às vezes demora para encontrar alguém?</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O tempo de espera depende do número de usuários online no momento. O contador na tela mostra há quantos segundos você aguarda. Nos horários de pico, a conexão é quase instantânea.</p>
+                </div>
+            </div>
+        `
+    },
+    rules: {
+        title: 'Regras da Comunidade (Rules)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:16px">
+                <div style="background:rgba(239, 68, 68, 0.1);border:1px solid var(--status-danger);padding:20px;border-radius:12px;margin-bottom:16px">
+                    <strong style="color:var(--status-danger); font-size:18px;">Aviso de Tolerância Zero</strong>
+                    <p style="margin-top:8px;color:var(--text-body);line-height:1.6">O descumprimento das regras abaixo resultará no bloqueio permanente do acesso à plataforma, sem direito a recurso.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 1 — Maioridade Obrigatória</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma exclusiva para maiores de 18 anos. Ao acessar, você declara legalmente ter atingido essa idade. O acesso por menores constitui violação grave e será tratado com o máximo rigor.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 2 — Proibição Absoluta de Conteúdo Ilegal</strong>
+                    <p style="color:var(--text-body);line-height:1.6">É estritamente proibido utilizar o Zuegle para discutir, planejar, incitar ou distribuir qualquer conteúdo ilegal, incluindo: exploração e abuso infantil, tráfico de drogas ou armas, terrorismo e extremismo violento, extorsão e ameaças, lavagem de dinheiro, documentos ou identidades falsas, e invasão de sistemas. Esses casos são reportados às autoridades com todos os metadados disponíveis.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 3 — Respeito e Conduta</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O anonimato não é escudo para a toxicidade. São proibidos: insultos de natureza racial, étnica, religiosa ou de gênero, assédio sexual ou intimidação, ameaças de qualquer natureza, bullying e humilhação, e exposição de dados pessoais de terceiros.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 4 — Proibição de Spam e Publicidade</strong>
+                    <p style="color:var(--text-body);line-height:1.6">São proibidos: divulgação de redes sociais de qualquer tipo, venda de produtos ou serviços, compartilhamento de links externos, divulgação de conteúdo adulto pago, e uso de automação ou scripts.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 5 — Uso Responsável do Botão Reportar</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O botão Reportar existe para proteger a comunidade. Use-o sempre que encontrar comportamento abusivo. O uso indevido deste recurso também é monitorado.</p>
+                </div>
+            </div>
+        `
+    },
+    support: {
+        title: 'Suporte (Support)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:16px">
+                <p style="margin-bottom:16px;line-height:1.6"><strong>Como podemos ajudar?</strong><br>Nossa equipe está disponível para resolver problemas técnicos, esclarecer dúvidas e tratar casos de abuso. Escolha o canal adequado:</p>
+                
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px">
+                    <strong style="color:var(--brand-primary);font-size:18px;display:block;margin-bottom:8px">Suporte Geral</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Para dúvidas técnicas, problemas de acesso ou sugestões:<br><strong style="color:var(--text-title)">suporte@zuegle.com</strong><br>Tempo de resposta: 48 a 72 horas úteis</p>
+                </div>
+
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px">
+                    <strong style="color:var(--status-danger);font-size:18px;display:block;margin-bottom:8px">Segurança e Crimes</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Para denúncias envolvendo conteúdo ilegal ou ameaças graves:<br><strong style="color:var(--text-title)">safety@zuegle.com</strong><br>Casos urgentes são priorizados.</p>
+                </div>
+
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:24px">
+                    <strong style="color:var(--status-warning);font-size:18px;display:block;margin-bottom:8px">Apelação de Bloqueio</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Se acredita ter sido bloqueado por engano:<br><strong style="color:var(--text-title)">appeals@zuegle.com</strong><br>Descreva detalhadamente a situação. Analisamos em até 5 dias úteis.</p>
+                </div>
+
+                <div style="background:rgba(245, 158, 11, 0.1);border:1px solid var(--status-warning);padding:20px;border-radius:12px;">
+                    <strong style="color:var(--status-warning);font-size:18px;">Importante</strong>
+                    <p style="margin-top:8px;color:var(--text-body);line-height:1.6">Devido à nossa arquitetura de zero armazenamento de mensagens, não é possível recuperar conversas após o encerramento. Sempre utilize o botão Reportar durante a conversa — é o método mais eficaz de proteção da comunidade.</p>
+                </div>
+            </div>
+        `
+    },
+    terms: {
+        title: 'Termos e Condições (Terms)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:24px">
+                <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Data de vigência: 21 de março de 2026</p>
+                
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 1 — Aceitação e Descrição do Serviço</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O presente acordo rege o acesso e uso dos serviços fornecidos pela Zuegle Inc. O Zuegle é um serviço de comunicação em tempo real que possibilita a troca anônima de mensagens de texto entre usuários. O serviço é fornecido "tal como está" e "conforme disponível". Ao acessar o Zuegle, você concorda integralmente com estes termos.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 2 — Elegibilidade</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O uso do Zuegle é permitido exclusivamente a pessoas com 18 anos ou mais. Ao utilizar a plataforma, você declara, sob responsabilidade legal, ter atingido essa idade. A Zuegle Inc. não se responsabiliza pelo acesso indevido por menores.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 3 — Licença de Uso</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Concedemos ao usuário uma licença limitada, não exclusiva, revogável e intransferível para uso pessoal e não comercial do Zuegle. É expressamente proibido: descompilar ou aplicar engenharia reversa na plataforma, utilizar automação ou scripts para interagir com o serviço, sobrecarregar ou atacar a infraestrutura, e usar a plataforma para fins comerciais sem autorização expressa.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 4 — Conduta do Usuário</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Você é inteiramente responsável pelo conteúdo que transmite através do Zuegle. É proibido transmitir qualquer conteúdo ilegal, abusivo, ameaçador, difamatório ou que viole direitos de terceiros. A Zuegle Inc. reserva-se o direito de bloquear imediatamente qualquer usuário que viole estas diretrizes.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 5 — Isenção de Responsabilidade</strong>
+                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. não se responsabiliza pelo conteúdo gerado pelos usuários. Na extensão máxima permitida pela lei, a Zuegle Inc. não será responsabilizada por danos diretos, indiretos, incidentais ou consequenciais resultantes do uso da plataforma. O usuário assume integralmente os riscos associados à interação com estranhos.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 6 — Modificações e Rescisão</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Reservamo-nos o direito de modificar estes termos, as funcionalidades da plataforma ou encerrar o serviço a qualquer momento, sem aviso prévio. Também podemos suspender ou bloquear qualquer usuário sem obrigação de justificativa.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 7 — Indenização</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Você concorda em isentar e indenizar a Zuegle Inc., seus diretores e parceiros, contra quaisquer reclamações, danos ou despesas decorrentes do seu uso indevido da plataforma ou violação destes Termos.</p>
+                </div>
+            </div>
+        `
+    },
+    privacy: {
+        title: 'Política de Privacidade (Privacy)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:24px">
+                <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Data de vigência: 21 de março de 2026</p>
+                
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Nosso Compromisso</strong>
+                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. está comprometida com a minimização máxima de dados pessoais. Não coletamos o que não precisamos, não armazenamos o que não usamos e não compartilhamos o que não é necessário.</p>
+                </div>
+
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">A. Dados de Conversação</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O Zuegle não registra, arquiva ou armazena o conteúdo das mensagens trocadas entre usuários. As conversações existem exclusivamente de forma volátil durante a sessão ativa e são permanentemente descartadas no momento em que qualquer uma das partes encerra a conexão. Não existe histórico, banco de dados de mensagens ou qualquer forma de recuperação de conversas anteriores.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">B. Identificadores de Rede</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Por necessidade técnica inerente ao funcionamento de qualquer serviço conectado à internet, nossos sistemas processam metadados técnicos de conexão. Estes dados são utilizados exclusivamente para fins operacionais e de integridade da plataforma. Usuários que utilizam o serviço de forma regular têm seus dados de conexão removidos imediatamente após o encerramento da sessão. Dados associados a violações graves e confirmadas dos Termos de Serviço podem ser retidos pelo tempo necessário para garantir a segurança da comunidade.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">C. Preferências de Interface</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Utilizamos armazenamento local no próprio navegador do usuário exclusivamente para salvar preferências de interface, como a escolha entre tema claro ou escuro. Estes dados residem inteiramente no dispositivo do usuário e jamais são transmitidos aos nossos servidores.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">D. Serviços de Terceiros</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Para garantir a qualidade e a segurança da plataforma, utilizamos serviços especializados de terceiros que operam sob suas próprias políticas de privacidade. Podemos exibir publicidade através de parceiros comerciais. Não vendemos dados de usuários a anunciantes.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">E. Cooperação com Autoridades</strong>
+                    <p style="color:var(--text-body);line-height:1.6">O compromisso com o anonimato cessa diante de obrigações legais. Quando confrontados com determinações judiciais ou solicitações oficiais de autoridades competentes em casos que envolvam risco iminente à vida, exploração de menores ou crimes graves, forneceremos os dados técnicos disponíveis na extensão exigida pela lei.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">F. Seus Direitos</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Como não coletamos dados pessoais identificáveis, não existe perfil de usuário para acessar, corrigir ou excluir. Para qualquer dúvida relacionada a privacidade, entre em contato: <strong style="color:var(--brand-primary)">privacidade@zuegle.com</strong></p>
+                </div>
+            </div>
+        `
+    },
+    legal: {
+        title: 'Legal e Jurisdição (Legal)',
+        content: `
+            <div style="display:flex;flex-direction:column;gap:24px">
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Propriedade Intelectual</strong>
+                    <p style="color:var(--text-body);line-height:1.6">A arquitetura, o código-fonte, os logotipos, o design e a identidade visual do Zuegle são propriedade exclusiva da Zuegle Inc. É proibida a reprodução, cópia ou uso não autorizado da marca Zuegle. Violações resultarão em medidas legais imediatas.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Conformidade Legal</strong>
+                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. opera em conformidade com a legislação brasileira aplicável e coopera com autoridades competentes quando legalmente exigido. Para notificações legais ou de direitos autorais: <strong style="color:var(--text-title)">legal@zuegle.com</strong></p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Jurisdição</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Este contrato é regido pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de São Paulo — SP para resolução de litígios, com renúncia a qualquer outro foro, salvo disposições imperativas de proteção ao consumidor.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula de Divisibilidade</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Se qualquer disposição destes termos for considerada inválida por tribunal competente, tal invalidade se limitará exclusivamente à cláusula em questão, permanecendo todas as demais em plena vigência.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Limitação de Responsabilidade</strong>
+                    <p style="color:var(--text-body);line-height:1.6">Em nenhuma circunstância a Zuegle Inc. será responsabilizada por danos que excedam o valor pago pelo usuário pelos serviços nos últimos 12 meses. Dado o caráter gratuito da plataforma, esta limitação se aplica em sua totalidade.</p>
+                </div>
+                <div>
+                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Contato Jurídico</strong>
+                    <p style="color:var(--text-body);line-height:1.6"><strong style="color:var(--text-title)">legal@zuegle.com</strong></p>
+                </div>
+            </div>
+        `
+    }
 };
 
 function openInfoModal(s){
@@ -354,7 +807,7 @@ function openInfoModal(s){
 }
 function closeInfoModal(){document.getElementById('info-modal').classList.remove('on');}
 
-// CHAT LOGIC
+// LÓGICA DO CHAT INTACTA PARA COMUNICAR COM O BACKEND
 const socket=typeof io!=='undefined'?io():null;
 const scroll=document.getElementById('scroll');
 const land=document.getElementById('land');
@@ -375,26 +828,36 @@ const cc=document.getElementById('cc');
 
 let isChatting=false,typingTimeout,captchaToken="",rcWidgetId=null,stopLocked=false,waitTimer=null,waitSecs=0;
 
-// Auto-resize + char counter
+// Contador e Ajuste da caixa de texto
 msgInput.addEventListener('input',function(){
     this.style.height='auto';
     this.style.height=this.scrollHeight+'px';
     if(!this.value)this.style.height='auto';
     const l=this.value.length;
-    if(l>=400){cc.style.display='block';cc.textContent=l+'/500';cc.style.color=l>=480?'#ef4444':'var(--text3)';}
+    if(l>=400){
+        cc.style.display='block';
+        cc.textContent=l+'/500';
+        cc.style.color=l>=480?'var(--status-danger)':'var(--text-muted)';
+    }
     else cc.style.display='none';
+    
+    btnSend.disabled = l === 0;
+
+    // Typing indicator para o parceiro
+    if(!isChatting||!socket)return;
+    socket.emit('typing',true);
+    clearTimeout(typingTimeout);
+    typingTimeout=setTimeout(()=>socket.emit('typing',false),1500);
 });
 
 function onCaptchaLoaded(){}
 function onSpamCaptchaSolved(t){captchaToken=t;captchaModal.classList.remove('on');startNewChat();}
 
-agreeChk.addEventListener('change',()=>{
-    btnStart.disabled=!agreeChk.checked;
-});
+agreeChk.addEventListener('change',()=>{ btnStart.disabled=!agreeChk.checked; });
 
 function openTermsModal(){termsModal.classList.add('on');agreeChk.checked=false;btnStart.disabled=true;}
 function closeTermsModal(){termsModal.classList.remove('on');}
-function cancelSpamCaptcha(){captchaModal.classList.remove('on');disconnectChat("Você cancelou a verificação.");}
+function cancelSpamCaptcha(){captchaModal.classList.remove('on');disconnectChat("Cancelou a verificação.");}
 
 function acceptTermsAndStart(){
     closeTermsModal();
@@ -416,14 +879,16 @@ function appendYou(text){
     const w=document.createElement('div');
     w.className='mrow you';
     w.innerHTML='<div class="mlbl">Você</div><div class="mbub">'+escapeHTML(text)+'</div>';
-    chatbox.appendChild(w);scrollBot();
+    chatbox.appendChild(w);
+    scrollBot();
 }
 
 function appendStranger(text){
     const w=document.createElement('div');
     w.className='mrow str';
-    w.innerHTML='<div class="mlbl">Estranho</div><div class="mbub">'+escapeHTML(text)+'</div>';
-    chatbox.appendChild(w);scrollBot();
+    w.innerHTML='<div class="mlbl">Parceiro</div><div class="mbub">'+escapeHTML(text)+'</div>';
+    chatbox.appendChild(w);
+    scrollBot();
 }
 
 function scrollBot(){chatbox.scrollTop=chatbox.scrollHeight;}
@@ -435,34 +900,31 @@ function escapeHTML(s){
 function startNewChat(){
     chatbox.innerHTML='';
     isChatting=false;
-    msgInput.disabled=true;btnSend.disabled=true;btnReport.disabled=true;
-    btnStop.textContent='Parar';btnStop.className='btn-stop-c';
+    msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
+    btnStop.textContent='Parar Sessão'; btnStop.className='btn-stop-c';
     typing.classList.remove('on');
-    msgInput.style.height='auto';cc.style.display='none';
-    clearInterval(waitTimer);waitSecs=0;
-    appendSystem("Estabelecendo conexão com o servidor...");
+    msgInput.style.height='auto'; cc.style.display='none'; msgInput.value='';
+    clearInterval(waitTimer); waitSecs=0;
+    
+    appendSystem("Preparando infraestrutura de chat seguro...");
+    
     if(socket){
         const tags=tagsInput.value.split(',').map(t=>t.trim().toLowerCase()).filter(t=>t);
         socket.emit('start_chat',{captchaToken,tags});
         captchaToken="";
         if(typeof grecaptcha!=='undefined'&&rcWidgetId!==null)grecaptcha.reset(rcWidgetId);
     }else{
-        appendSystem("Erro: Servidor offline.",true);
+        appendSystem("Falha na Rede: O servidor Socket.io está incontactável.",true);
     }
 }
 
-msgInput.addEventListener('input',()=>{
-    if(!isChatting||!socket)return;
-    socket.emit('typing',true);
-    clearTimeout(typingTimeout);
-    typingTimeout=setTimeout(()=>socket.emit('typing',false),1500);
-});
+
 
 if(socket){
     socket.on('online_count',c=>{if(ocEl)ocEl.textContent=c.toLocaleString('pt-BR');});
 
     socket.on('waiting',()=>{
-        const d=appendSystem("Procurando alguém para conversar... (0s)");
+        const d=appendSystem("Alocando parceiro compatível... (0s)");
         d.setAttribute('data-waiting','true');
         waitSecs=0;clearInterval(waitTimer);
         waitTimer=setInterval(()=>{
@@ -470,12 +932,12 @@ if(socket){
             const m=Math.floor(waitSecs/60),s=waitSecs%60;
             const t=m>0?m+'m '+s+'s':s+'s';
             const el=chatbox.querySelector('[data-waiting]');
-            if(el)el.textContent='Procurando alguém para conversar... ('+t+')';
+            if(el)el.textContent='Alocando parceiro compatível... ('+t+')';
         },1000);
     });
 
     socket.on('captcha_required',()=>{
-        appendSystem("Verificação de segurança necessária.",true);
+        appendSystem("Bloqueio de Anti-Spam ativado.",true);
         captchaModal.classList.add('on');
         if(typeof grecaptcha!=='undefined'&&rcWidgetId===null){
             rcWidgetId=grecaptcha.render('recaptcha-container',{
@@ -487,17 +949,18 @@ if(socket){
 
     socket.on('chat_started',data=>{
         clearInterval(waitTimer);
-        chatbox.innerHTML='';isChatting=true;
-        msgInput.disabled=false;btnSend.disabled=false;btnReport.disabled=false;
+        chatbox.innerHTML='';
+        isChatting=true;
+        msgInput.disabled=false; btnReport.disabled=false;
         msgInput.focus();
-        appendSystem("Agora você está falando com um estranho. Diga olá!");
+        appendSystem("Conexão estabelecida com sucesso!");
         if(data&&data.commonTags&&data.commonTags.length>0)
-            appendSystem("Interesses em comum: "+data.commonTags.join(', '));
+            appendSystem("Assuntos em comum: "+data.commonTags.join(', '));
     });
 
     socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
     socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
-    socket.on('stranger_disconnected',()=>disconnectChat("O estranho desconectou."));
+    socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
     socket.on('system_message',msg=>appendSystem(msg,true));
 }
 
@@ -507,7 +970,8 @@ function sendMessage(){
     if(!text)return;
     appendYou(text);
     if(socket){socket.emit('send_message',text);socket.emit('typing',false);}
-    msgInput.value='';msgInput.style.height='auto';cc.style.display='none';msgInput.focus();
+    msgInput.value=''; msgInput.style.height='auto'; cc.style.display='none'; btnSend.disabled=true;
+    msgInput.focus();
     clearTimeout(typingTimeout);
 }
 
@@ -516,23 +980,23 @@ function handleEnter(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send
 function handleStopButton(){
     if(stopLocked)return;
     stopLocked=true;setTimeout(()=>stopLocked=false,800);
-    if(isChatting){if(socket)socket.emit('stop_chat');disconnectChat("Você desconectou.");}
+    if(isChatting){if(socket)socket.emit('stop_chat');disconnectChat("Sessão encerrada por você.");}
     else startNewChat();
 }
 
 function handleReport(){
     if(!isChatting)return;
-    if(confirm("Deseja reportar este usuário por comportamento abusivo?")){
+    if(confirm("Confirma o reporte e bloqueio deste usuário?")){
         if(socket)socket.emit('report_user');
-        disconnectChat("Usuário reportado. Conexão encerrada.");
+        disconnectChat("Usuário reportado com sucesso. Sala fechada.");
     }
 }
 
 function disconnectChat(msg){
-    isChatting=false;typing.classList.remove('on');
+    isChatting=false; typing.classList.remove('on');
     appendSystem(msg);
-    msgInput.disabled=true;btnSend.disabled=true;btnReport.disabled=true;
-    btnStop.textContent='Nova Conversa';btnStop.className='btn-stop-c nc';
+    msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
+    btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
 }
 </script>
 </body>
