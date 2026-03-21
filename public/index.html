@@ -303,46 +303,51 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Todas as mensagens alinhadas à esquerda */
-        .mrow { align-self: flex-start; align-items: flex-start; width: 100%; }
-        
-        /* Wrapper interno com indent para separar você do parceiro */
-        .mrow.you { padding-left: 24px; }
-        .mrow.str { padding-left: 0; }
+        /* ── SISTEMA DE MENSAGENS — TUDO À ESQUERDA ── */
+        .mrow { display: flex; flex-direction: column; align-items: flex-start; width: 100%; gap: 3px; }
 
-        /* Labels acima das bolhas */
+        /* Label nome */
         .mlbl {
-            font-family: var(--font-head); font-size: 11px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 1px;
-            padding: 0 2px; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
+            font-family: var(--font-head);
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 0.8px; text-transform: uppercase;
+            margin: 0 2px 3px;
         }
-        .mlbl::before {
-            content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-        }
-        .mrow.you .mlbl { color: #a78bfa; }
-        .mrow.you .mlbl::before { background: #a78bfa; }
-        .mrow.str .mlbl { color: #22d3ee; }
-        .mrow.str .mlbl::before { background: #22d3ee; }
+        .mrow.you .mlbl { color: #8b5cf6; }
+        .mrow.str .mlbl { color: #06b6d4; }
 
         /* Bolhas */
         .mbub {
-            padding: 12px 18px; border-radius: 14px;
-            font-size: 15px; line-height: 1.65; font-weight: 400;
-            max-width: min(520px, 80%); word-break: break-word;
+            padding: 10px 16px;
+            font-size: 15px; line-height: 1.6; font-weight: 400;
+            max-width: min(520px, 78%); word-break: break-word;
+            border-radius: 4px 14px 14px 14px;
         }
-        /* VOCÊ — roxo sólido */
+
+        /* VOCÊ — roxo */
         .mrow.you .mbub {
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-            color: #fff;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 12px rgba(139,92,246,0.3);
+            background: #4c1d95;
+            color: #ede9fe;
+            border-left: 3px solid #8b5cf6;
         }
-        /* PARCEIRO — superfície escura com borda ciano */
+
+        /* ESTRANHO — azul escuro */
         .mrow.str .mbub {
-            background: #1e1e24;
-            border: 1.5px solid #22d3ee40;
-            color: #f0f0f0;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background: #0c2340;
+            color: #e0f2fe;
+            border-left: 3px solid #06b6d4;
+        }
+
+        /* Tema claro */
+        html.light .mrow.you .mbub {
+            background: #ede9fe;
+            color: #3b0764;
+            border-left: 3px solid #7c3aed;
+        }
+        html.light .mrow.str .mbub {
+            background: #e0f7ff;
+            color: #0c2340;
+            border-left: 3px solid #0891b2;
         }
         
         #typing { display: none; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 0 32px 12px; }
@@ -926,7 +931,7 @@ function appendYou(text){
 function appendStranger(text){
     const w=document.createElement('div');
     w.className='mrow str';
-    w.innerHTML='<div class="mlbl">Parceiro</div><div class="mbub">'+escapeHTML(text)+'</div>';
+    w.innerHTML='<div class="mlbl">Estranho</div><div class="mbub">'+escapeHTML(text)+'</div>';
     chatbox.appendChild(w);
     scrollBot();
 }
