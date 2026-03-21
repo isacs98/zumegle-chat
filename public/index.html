@@ -302,20 +302,22 @@
         .mrow { display: flex; flex-direction: column; gap: 6px; max-width: 85%; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .mrow.you { align-self: flex-end; align-items: flex-end; }
-        .mrow.str { align-self: flex-start; align-items: flex-start; }
+        .mrow { align-self: flex-start; align-items: flex-start; }
         
-        /* Nomes acima das bolhas */
-        .mlbl { font-family: var(--font-head); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; }
+        /* Labels acima das bolhas */
+        .mlbl { font-family: var(--font-head); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; margin-bottom: 4px; }
         .mrow.you .mlbl { color: var(--brand-primary); }
         .mrow.str .mlbl { color: var(--brand-secondary); }
         
-        .mbub { padding: 16px 20px; border-radius: 12px; font-size: 16px; line-height: 1.6; font-weight: 500; }
-        .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-right-radius: 0; }
+        .mbub { padding: 14px 18px; border-radius: 12px; font-size: 15px; line-height: 1.6; font-weight: 500; max-width: 600px; word-break: break-word; }
+        .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-left-radius: 0; }
         .mrow.str .mbub { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); border-bottom-left-radius: 0; }
         
-        #typing { display: none; align-self: flex-start; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 12px 20px; border-radius: 12px; border: 2px solid var(--border-color); }
+        #typing { display: none; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 0 32px 12px; }
         #typing.on { display: flex; }
+        .tdots span { display: inline-block; width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; margin: 0 1px; animation: bounce 1s infinite; }
+        .tdots span:nth-child(2) { animation-delay: 0.2s; }
+        .tdots span:nth-child(3) { animation-delay: 0.4s; }
         .tdots span { display: inline-block; width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; margin: 0 2px; animation: bounce 1s infinite; }
         .tdots span:nth-child(2) { animation-delay: 0.2s; }
         .tdots span:nth-child(3) { animation-delay: 0.4s; }
@@ -388,6 +390,10 @@
 
 <!-- AD BAR -->
 <div class="ad">Espaço Publicitário — Otimize a sua campanha do Google AdSense aqui</div>
+<div id="status-bar" style="display:none; padding:10px 32px; background:var(--bg-surface); border-bottom:1px solid var(--border-light); font-family:var(--font-head); font-size:13px; font-weight:700; color:var(--status-online); letter-spacing:0.5px; display:none; align-items:center; gap:8px;">
+    <div class="dot"></div>
+    <span id="status-bar-text">Conexão estabelecida com sucesso!</span>
+</div>
 
 <!-- SCROLL CONTAINER PRINCIPAL -->
 <div id="scroll">
@@ -535,21 +541,13 @@
 
 <!-- INTERFACE DE CHAT PRINCIPAL -->
 <main id="chat">
-    <div class="chat-header">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <h2>Sessão Ativa</h2>
-        <div style="margin-left:auto" class="status"><div class="dot"></div> Protegido</div>
-    </div>
+
     
     <div id="chatbox"></div>
     
-    <!-- Bolha de Digitação Estilizada -->
-    <div style="padding: 0 32px">
-        <div id="typing">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-            O Parceiro está digitando
-            <div class="tdots"><span></span><span></span><span></span></div>
-        </div>
+    <div id="typing">
+        <div class="tdots"><span></span><span></span><span></span></div>
+        O parceiro está digitando
     </div>
     
     <div id="bar">
@@ -934,7 +932,9 @@ if(socket){
     socket.on('online_count',c=>{if(ocEl)ocEl.textContent=c.toLocaleString('pt-BR');});
 
     socket.on('waiting',()=>{
-        const d=appendSystem("Alocando parceiro compatível... (0s)");
+        // Limpa mensagens anteriores e cria só UMA
+        chatbox.innerHTML='';
+        const d=appendSystem("Procurando alguém para conversar... (0s)");
         d.setAttribute('data-waiting','true');
         waitSecs=0;clearInterval(waitTimer);
         waitTimer=setInterval(()=>{
@@ -942,8 +942,7 @@ if(socket){
             const m=Math.floor(waitSecs/60),s=waitSecs%60;
             const t=m>0?m+'m '+s+'s':s+'s';
             const el=chatbox.querySelector('[data-waiting]');
-            if(el)el.textContent='Alocando parceiro compatível... ('+t+')';
-            scrollBot();
+            if(el)el.textContent='Procurando alguém para conversar... ('+t+')';
         },1000);
     });
 
@@ -964,9 +963,13 @@ if(socket){
         isChatting=true;
         msgInput.disabled=false; btnReport.disabled=false;
         msgInput.focus();
-        appendSystem("Conexão estabelecida com sucesso!");
-        if(data&&data.commonTags&&data.commonTags.length>0)
-            appendSystem("Assuntos em comum: "+data.commonTags.join(', '));
+        // Show status in top bar instead of chatbox
+        const sb=document.getElementById('status-bar');
+        if(sb){ sb.style.display='flex'; }
+        if(data&&data.commonTags&&data.commonTags.length>0){
+            const sbText=document.getElementById('status-bar-text');
+            if(sbText) sbText.textContent='Conexão estabelecida! Interesses em comum: '+data.commonTags.join(', ');
+        }
     });
 
     socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
@@ -1008,6 +1011,8 @@ function disconnectChat(msg){
     appendSystem(msg);
     msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
     btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
+    const sb=document.getElementById('status-bar');
+    if(sb) sb.style.display='none';
 }
 </script>
 </body>
