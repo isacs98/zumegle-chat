@@ -23,10 +23,12 @@ const MAX_VIOLATIONS = 3;
 
 // Vendas e spam comercial
 const PALAVRAS_VENDAS = [
-    'onlyfans','privacy','compre agora','vendo','promoção','desconto',
+    'onlyfans','privacy','compre','compra','vendo','venda','vende',
+    'venda de','vendendo','pack','packs','promoção','promocao','desconto',
     'ganhar dinheiro','renda extra','trabalhe em casa','oportunidade de negócio',
-    'whatsapp','telegram','instagram','tiktok','twitter','facebook',
-    'snapchat','kwai','seguidores',
+    'whatsapp','wpp','zap','telegram','instagram','insta','tiktok',
+    'twitter','facebook','snapchat','kwai','seguidores','divulg',
+    'acessa','acesse','entra no','entre no',
 ];
 
 // Links e URLs
