@@ -26,8 +26,8 @@
             --bg-surface: #18181b; /* Cinza escuro para cards */
             --bg-surface-hover: #27272a;
             
-            --brand-primary: #8b5cf6; /* Roxo Vibrante */
-            --brand-primary-hover: #7c3aed;
+            --brand-primary: #3b82f6; /* Roxo Vibrante */
+            --brand-primary-hover: #2563eb;
             --brand-secondary: #06b6d4; /* Ciano Neon */
             
             --text-title: #ffffff;
@@ -54,8 +54,8 @@
             --bg-surface: #ffffff;
             --bg-surface-hover: #f1f5f9;
             
-            --brand-primary: #6d28d9;
-            --brand-primary-hover: #5b21b6;
+            --brand-primary: #1d4ed8;
+            --brand-primary-hover: #1d4ed8;
             --brand-secondary: #0891b2;
             
             --text-title: #09090b;
@@ -313,41 +313,41 @@
             letter-spacing: 0.8px; text-transform: uppercase;
             margin: 0 2px 3px;
         }
-        .mrow.you .mlbl { color: #8b5cf6; }
-        .mrow.str .mlbl { color: #06b6d4; }
+        .mrow.you .mlbl { color: #3b82f6; }
+        .mrow.str .mlbl { color: #f97316; }
 
         /* Bolhas */
         .mbub {
-            padding: 10px 16px;
-            font-size: 15px; line-height: 1.6; font-weight: 400;
-            max-width: min(520px, 78%); word-break: break-word;
-            border-radius: 4px 14px 14px 14px;
+            padding: 12px 18px;
+            font-size: 15px; line-height: 1.65; font-weight: 400;
+            max-width: min(500px, 78%); word-break: break-word;
+            border-radius: 4px 18px 18px 18px;
         }
 
-        /* VOCÊ — roxo */
+        /* VOCÊ — azul */
         .mrow.you .mbub {
-            background: #4c1d95;
-            color: #ede9fe;
-            border-left: 3px solid #8b5cf6;
+            background: #1d4ed8;
+            color: #eff6ff;
+            border: 1px solid #3b82f6;
         }
 
-        /* ESTRANHO — azul escuro */
+        /* ESTRANHO — laranja escuro */
         .mrow.str .mbub {
-            background: #0c2340;
-            color: #e0f2fe;
-            border-left: 3px solid #06b6d4;
+            background: #431407;
+            color: #fed7aa;
+            border: 1px solid #ea580c55;
         }
 
         /* Tema claro */
         html.light .mrow.you .mbub {
-            background: #ede9fe;
-            color: #3b0764;
-            border-left: 3px solid #7c3aed;
+            background: #dbeafe;
+            color: #1e3a8a;
+            border: 1px solid #93c5fd;
         }
         html.light .mrow.str .mbub {
-            background: #e0f7ff;
-            color: #0c2340;
-            border-left: 3px solid #0891b2;
+            background: #ffedd5;
+            color: #7c2d12;
+            border: 1px solid #fdba74;
         }
         
         #typing { display: none; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 0 32px 12px; }
