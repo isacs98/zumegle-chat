@@ -401,6 +401,24 @@
             .btn-rep { height: 48px; width: 48px; }
             .mrow { max-width: 90%; }
         }
+
+        /* Logo spin animation */
+        @keyframes logoSpin {
+            0% { transform: rotate(-3deg) scale(1); }
+            25% { transform: rotate(15deg) scale(1.1); }
+            50% { transform: rotate(-10deg) scale(1.05); }
+            75% { transform: rotate(8deg) scale(1.1); }
+            100% { transform: rotate(-3deg) scale(1); }
+        }
+        .logo-ic.spinning { animation: logoSpin 0.6s ease; }
+
+        /* Status bar fade out */
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .status-fade { animation: fadeOut 3s ease forwards; }
     </style>
 </head>
 <body class="dark">
@@ -427,7 +445,7 @@
 
 <!-- AD BAR -->
 <div class="ad">Espaço Publicitário — Otimize a sua campanha do Google AdSense aqui</div>
-<div id="status-bar" style="display:none; padding:10px 32px 10px; background:var(--bg-surface); border-bottom:2px solid var(--border-color); font-family:var(--font-head); font-size:13px; font-weight:700; color:var(--status-online); letter-spacing:0.5px; align-items:center; gap:8px;">
+<div id="status-bar" style="display:none; padding:10px 32px; background:var(--bg-surface); border-bottom:2px solid var(--border-color); font-family:var(--font-head); font-size:13px; font-weight:700; color:var(--status-online); letter-spacing:0.5px; align-items:center; gap:8px; transition: opacity 0.6s ease;">
     <div class="dot"></div>
     <span id="status-bar-text">Conexão estabelecida com sucesso!</span>
 </div>
@@ -1000,16 +1018,30 @@ if(socket){
         isChatting=true;
         msgInput.disabled=false; btnReport.disabled=false;
         msgInput.focus();
-        // Show status in top bar instead of chatbox
+
+        // Som de conexão
+        playSound('connect');
+
+        // Animação do logo
+        spinLogo();
+
+        // Barra de status com fade
         const sb=document.getElementById('status-bar');
-        if(sb){ sb.style.display='flex'; }
+        if(sb){
+            sb.style.display='flex';
+            sb.style.opacity='1';
+            sb.classList.remove('status-fade');
+            void sb.offsetWidth; // reflow
+            sb.classList.add('status-fade');
+            setTimeout(()=>{ sb.style.display='none'; }, 3000);
+        }
         if(data&&data.commonTags&&data.commonTags.length>0){
             const sbText=document.getElementById('status-bar-text');
             if(sbText) sbText.textContent='Conexão estabelecida! Interesses em comum: '+data.commonTags.join(', ');
         }
     });
 
-    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
+    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);playSound('receive');});
     socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
     socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
     socket.on('system_message',msg=>{ console.log('SYSTEM MSG:', msg); appendSystem(msg,true); });
@@ -1023,6 +1055,7 @@ function sendMessage(){
     if(socket){socket.emit('send_message',text);socket.emit('typing',false);}
     msgInput.value=''; msgInput.style.height='auto'; cc.style.display='none'; btnSend.disabled=true;
     msgInput.focus();
+    playSound('send');
     clearTimeout(typingTimeout);
 }
 
@@ -1044,12 +1077,83 @@ function handleReport(){
 }
 
 function disconnectChat(msg){
+    playSound('disconnect');
     isChatting=false; typing.classList.remove('on');
     appendSystem(msg);
     msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
     btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
     const sb=document.getElementById('status-bar');
     if(sb) sb.style.display='none';
+}
+
+// ── SONS ──────────────────────────────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function getAudioCtx() {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    return audioCtx;
+}
+
+function playSound(type) {
+    try {
+        const ctx = getAudioCtx();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g);
+        g.connect(ctx.destination);
+
+        if (type === 'connect') {
+            // Dois bips ascendentes — "encontrou alguém!"
+            o.type = 'sine';
+            o.frequency.setValueAtTime(440, ctx.currentTime);
+            o.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+            g.gain.setValueAtTime(0.3, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+            o.start(ctx.currentTime);
+            o.stop(ctx.currentTime + 0.5);
+
+        } else if (type === 'send') {
+            // Bip suave e curto — "mensagem enviada"
+            o.type = 'sine';
+            o.frequency.setValueAtTime(880, ctx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.08);
+            g.gain.setValueAtTime(0.15, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+            o.start(ctx.currentTime);
+            o.stop(ctx.currentTime + 0.12);
+
+        } else if (type === 'receive') {
+            // Bip suave diferente — "mensagem recebida"
+            o.type = 'sine';
+            o.frequency.setValueAtTime(600, ctx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.1);
+            g.gain.setValueAtTime(0.18, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+            o.start(ctx.currentTime);
+            o.stop(ctx.currentTime + 0.18);
+
+        } else if (type === 'disconnect') {
+            // Tom descendente — "desconectou"
+            o.type = 'sine';
+            o.frequency.setValueAtTime(500, ctx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.4);
+            g.gain.setValueAtTime(0.2, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            o.start(ctx.currentTime);
+            o.stop(ctx.currentTime + 0.4);
+        }
+    } catch(e) {}
+}
+
+// ── ANIMAÇÃO DO LOGO ───────────────────────────────────────────────────────
+function spinLogo() {
+    const ic = document.querySelector('.logo-ic');
+    if (!ic) return;
+    ic.classList.remove('spinning');
+    void ic.offsetWidth; // reflow para reiniciar animação
+    ic.classList.add('spinning');
+    setTimeout(() => ic.classList.remove('spinning'), 700);
 }
 </script>
 </body>
