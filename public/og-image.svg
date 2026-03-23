@@ -1,48 +1,58 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f1117"/>
-      <stop offset="100%" stop-color="#1a1d27"/>
+      <stop offset="0%" stop-color="#09090b"/>
+      <stop offset="100%" stop-color="#141416"/>
     </linearGradient>
-    <linearGradient id="title" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#f97316"/>
-    </linearGradient>
-    <linearGradient id="icon" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1d4ed8"/>
-      <stop offset="100%" stop-color="#f97316"/>
+    <linearGradient id="ic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
     </linearGradient>
   </defs>
 
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bg)"/>
 
-  <!-- Decorative circles -->
-  <circle cx="100" cy="100" r="200" fill="#3b82f6" opacity="0.05"/>
-  <circle cx="1100" cy="530" r="250" fill="#f97316" opacity="0.05"/>
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(113,113,122,0.12)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- Icon -->
-  <rect x="90" y="215" width="120" height="120" rx="28" fill="url(#icon)"/>
-  <path d="M175 240H125a10 10 0 0 0-10 10v27a10 10 0 0 0 10 10h7l-3 13 17-13h19a10 10 0 0 0 10-10v-27a10 10 0 0 0-10-10z" fill="white" opacity="0.95"/>
+  <!-- Glow esquerda -->
+  <radialGradient id="glow1" cx="20%" cy="40%" r="40%">
+    <stop offset="0%" stop-color="#2563eb" stop-opacity="0.12"/>
+    <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
 
-  <!-- Title -->
-  <text x="240" y="290" font-family="Arial Black, sans-serif" font-size="96" font-weight="900" fill="url(#title)">Zumegle</text>
+  <!-- Ícone grande -->
+  <rect x="80" y="200" width="160" height="160" rx="36" fill="url(#ic)"/>
+  <g transform="translate(80,200) scale(6.6) translate(1.5,1.5)">
+    <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.6382 20 9.34757 19.721 8.18841 19.2218L3 21L4.7782 15.8116C4.279 14.6524 4 13.3618 4 12C4 7.02944 8.02944 3 13 3C17.9706 3 21 7.02944 21 11.5Z"
+      fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 9L15 9L9 15L15 15" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 
-  <!-- Divider -->
-  <rect x="90" y="360" width="1020" height="3" rx="2" fill="#334155"/>
+  <!-- Nome -->
+  <text x="270" y="310" font-family="Arial Black, sans-serif" font-size="110" font-weight="900" fill="white" letter-spacing="-3">ZUEGLE</text>
 
-  <!-- Description -->
-  <text x="90" y="420" font-family="Arial, sans-serif" font-size="38" fill="#94a3b8">O chat anônimo brasileiro.</text>
-  <text x="90" y="470" font-family="Arial, sans-serif" font-size="38" fill="#94a3b8">Encontre pessoas aleatórias para conversar agora.</text>
+  <!-- Linha separadora -->
+  <rect x="80" y="390" width="1040" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
+
+  <!-- Descrição -->
+  <text x="80" y="450" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.6)">O chat anônimo brasileiro. Converse com estranhos agora.</text>
 
   <!-- URL -->
-  <text x="90" y="560" font-family="Arial, sans-serif" font-size="28" fill="#475569">zumegle-chat.onrender.com</text>
+  <text x="80" y="550" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.3)">zumegle-chat.onrender.com</text>
 
-  <!-- Online badge -->
-  <circle cx="1100" cy="555" r="8" fill="#22c55e"/>
-  <circle cx="1100" cy="555" r="8" fill="#22c55e" opacity="0.4">
-    <animate attributeName="r" from="8" to="16" dur="1.5s" repeatCount="indefinite"/>
+  <!-- Badge online -->
+  <circle cx="1120" cy="545" r="9" fill="#10b981"/>
+  <circle cx="1120" cy="545" r="9" fill="#10b981" opacity="0.4">
+    <animate attributeName="r" from="9" to="18" dur="1.5s" repeatCount="indefinite"/>
     <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" repeatCount="indefinite"/>
   </circle>
-  <text x="1060" y="560" font-family="Arial, sans-serif" font-size="24" fill="#22c55e" text-anchor="end">Online</text>
+  <text x="1100" y="551" font-family="Arial, sans-serif" font-size="24" fill="#10b981" text-anchor="end">Online</text>
 </svg>
