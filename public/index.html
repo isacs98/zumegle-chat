@@ -1086,126 +1086,136 @@ function disconnectChat(msg){
     if(sb) sb.style.display='none';
 }
 
-// ── SONS PREMIUM ──────────────────────────────────────────────────────────
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-
-function getCtx() {
-    if (!audioCtx) audioCtx = new AudioCtx();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
+// ── SONS NATURAIS ─────────────────────────────────────────────────────────
+const _AC = window.AudioContext || window.webkitAudioContext;
+let _ctx = null;
+function ac() {
+    if (!_ctx) _ctx = new _AC();
+    if (_ctx.state === 'suspended') _ctx.resume();
+    return _ctx;
 }
 
-// Cria um reverb convolution simples para dar "espaço" ao som
-function createReverb(ctx, duration=0.8, decay=0.5) {
-    const len = ctx.sampleRate * duration;
-    const impulse = ctx.createBuffer(2, len, ctx.sampleRate);
+// Reverb natural com sala pequena
+function mkReverb(ctx, sec, decay) {
+    const len = ctx.sampleRate * sec;
+    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
     for (let c = 0; c < 2; c++) {
-        const ch = impulse.getChannelData(c);
+        const d = buf.getChannelData(c);
         for (let i = 0; i < len; i++)
-            ch[i] = (Math.random()*2-1) * Math.pow(1 - i/len, decay);
+            d[i] = (Math.random()*2-1) * Math.pow(1-i/len, decay);
     }
-    const conv = ctx.createConvolver();
-    conv.buffer = impulse;
-    return conv;
+    const cv = ctx.createConvolver();
+    cv.buffer = buf;
+    return cv;
+}
+
+// Simula o ataque/decay natural de um instrumento percussivo
+function mkEnv(ctx, gainNode, t, attack, hold, release) {
+    gainNode.gain.setValueAtTime(0, t);
+    gainNode.gain.linearRampToValueAtTime(1, t + attack);
+    gainNode.gain.setValueAtTime(1, t + attack + hold);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + attack + hold + release);
 }
 
 function playSound(type) {
     try {
-        const ctx = getCtx();
-        const master = ctx.createGain();
-        master.gain.setValueAtTime(0.6, ctx.currentTime);
-        master.connect(ctx.destination);
+        const ctx = ac();
+        const t = ctx.currentTime;
+        const out = ctx.createGain();
+        out.gain.value = 0.55;
+        out.connect(ctx.destination);
 
-        if (type === 'connect') {
-            // Som de "ding" suave — como sino de cristal
-            // Nota 1
-            const o1 = ctx.createOscillator();
-            const g1 = ctx.createGain();
-            const rev = createReverb(ctx, 1.2, 0.6);
-            o1.type = 'sine';
-            o1.frequency.setValueAtTime(523.25, ctx.currentTime);       // C5
-            g1.gain.setValueAtTime(0, ctx.currentTime);
-            g1.gain.linearRampToValueAtTime(0.5, ctx.currentTime+0.01);
-            g1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.0);
-            o1.connect(g1); g1.connect(rev); rev.connect(master);
-            o1.start(ctx.currentTime); o1.stop(ctx.currentTime+1.0);
+        if (type === 'message' || type === 'send' || type === 'receive') {
+            // Som de "pop" de chat — suave, discreto, profissional
+            // Inspirado no som do Telegram/Signal
+            const buf = ctx.createBuffer(1, ctx.sampleRate * 0.15, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            // Ruído branco filtrado + tom puro = textura natural
+            for (let i = 0; i < data.length; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.03));
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = buf;
 
-            // Nota 2 — harmonico
-            const o2 = ctx.createOscillator();
-            const g2 = ctx.createGain();
-            o2.type = 'sine';
-            o2.frequency.setValueAtTime(783.99, ctx.currentTime+0.12);  // G5
-            g2.gain.setValueAtTime(0, ctx.currentTime+0.12);
-            g2.gain.linearRampToValueAtTime(0.4, ctx.currentTime+0.13);
-            g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.1);
-            o2.connect(g2); g2.connect(rev); rev.connect(master);
-            o2.start(ctx.currentTime+0.12); o2.stop(ctx.currentTime+1.1);
-
-            // Nota 3
-            const o3 = ctx.createOscillator();
-            const g3 = ctx.createGain();
-            o3.type = 'sine';
-            o3.frequency.setValueAtTime(1046.5, ctx.currentTime+0.24);  // C6
-            g3.gain.setValueAtTime(0, ctx.currentTime+0.24);
-            g3.gain.linearRampToValueAtTime(0.35, ctx.currentTime+0.25);
-            g3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.2);
-            o3.connect(g3); g3.connect(rev); rev.connect(master);
-            o3.start(ctx.currentTime+0.24); o3.stop(ctx.currentTime+1.2);
-
-        } else if (type === 'send') {
-            // Pop suave de teclado — como bolha estourando
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
             const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(2000, ctx.currentTime);
-            filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime+0.08);
-            o.type = 'sine';
-            o.frequency.setValueAtTime(1200, ctx.currentTime);
-            o.frequency.exponentialRampToValueAtTime(600, ctx.currentTime+0.08);
-            g.gain.setValueAtTime(0.35, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.1);
-            o.connect(filter); filter.connect(g); g.connect(master);
-            o.start(ctx.currentTime); o.stop(ctx.currentTime+0.1);
+            filter.type = 'bandpass';
+            filter.frequency.value = 1800;
+            filter.Q.value = 0.8;
 
-        } else if (type === 'receive') {
-            // Pluck suave — como corda de violão levemente tocada
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
-            const rev = createReverb(ctx, 0.6, 0.4);
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(3000, ctx.currentTime);
-            filter.frequency.exponentialRampToValueAtTime(800, ctx.currentTime+0.15);
-            o.type = 'triangle';
-            o.frequency.setValueAtTime(659.25, ctx.currentTime);  // E5
-            g.gain.setValueAtTime(0, ctx.currentTime);
-            g.gain.linearRampToValueAtTime(0.3, ctx.currentTime+0.005);
-            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.5);
-            o.connect(filter); filter.connect(g);
-            g.connect(rev); rev.connect(master);
-            g.connect(master);
-            o.start(ctx.currentTime); o.stop(ctx.currentTime+0.5);
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(820, t);
+            osc.frequency.exponentialRampToValueAtTime(580, t + 0.1);
+
+            const gOsc = ctx.createGain();
+            const gNoise = ctx.createGain();
+            mkEnv(ctx, gOsc,   t, 0.003, 0.01, 0.12);
+            mkEnv(ctx, gNoise, t, 0.001, 0.005, 0.08);
+            gOsc.gain.value = 0.4;
+            gNoise.gain.value = 0.15;
+
+            osc.connect(gOsc); gOsc.connect(out);
+            noise.connect(filter); filter.connect(gNoise); gNoise.connect(out);
+
+            osc.start(t); osc.stop(t + 0.15);
+            noise.start(t); noise.stop(t + 0.15);
+
+        } else if (type === 'connect') {
+            // Acorde de piano digital — duas notas rápidas ascendentes
+            // Simula um "ting" de cristal com harmônicos reais
+            [[392, 0], [523.25, 0.1], [659.25, 0.2]].forEach(([freq, delay]) => {
+                const osc  = ctx.createOscillator();
+                const osc2 = ctx.createOscillator(); // harmônico
+                const g    = ctx.createGain();
+                const rev  = mkReverb(ctx, 1.5, 1.2);
+
+                osc.type  = 'sine';
+                osc2.type = 'sine';
+                osc.frequency.value  = freq;
+                osc2.frequency.value = freq * 2; // oitava acima
+
+                g.gain.setValueAtTime(0, t + delay);
+                g.gain.linearRampToValueAtTime(0.45, t + delay + 0.005);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + delay + 1.2);
+
+                const gH = ctx.createGain();
+                gH.gain.value = 0.15; // harmônico mais baixo
+
+                osc.connect(g);
+                osc2.connect(gH); gH.connect(g);
+                g.connect(rev); rev.connect(out);
+                g.connect(out);
+
+                osc.start(t + delay);  osc.stop(t + delay + 1.2);
+                osc2.start(t + delay); osc2.stop(t + delay + 1.2);
+            });
 
         } else if (type === 'disconnect') {
-            // Acorde descendente suave — como saída elegante
-            const notes = [392, 349.23, 293.66]; // G4, F4, D4
-            notes.forEach((freq, i) => {
-                const o = ctx.createOscillator();
-                const g = ctx.createGain();
-                const rev = createReverb(ctx, 1.0, 0.5);
-                o.type = 'sine';
-                o.frequency.setValueAtTime(freq, ctx.currentTime + i*0.12);
-                g.gain.setValueAtTime(0, ctx.currentTime + i*0.12);
-                g.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i*0.12 + 0.01);
-                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.12 + 0.8);
-                o.connect(g); g.connect(rev); rev.connect(master);
-                o.start(ctx.currentTime + i*0.12);
-                o.stop(ctx.currentTime + i*0.12 + 0.8);
+            // Dois tons descendentes suaves — como fechar uma porta gentilmente
+            [[440, 0], [330, 0.18]].forEach(([freq, delay]) => {
+                const osc = ctx.createOscillator();
+                const g   = ctx.createGain();
+                const rev = mkReverb(ctx, 0.8, 0.9);
+                const flt = ctx.createBiquadFilter();
+                flt.type = 'lowpass';
+                flt.frequency.setValueAtTime(1200, t + delay);
+                flt.frequency.exponentialRampToValueAtTime(400, t + delay + 0.5);
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, t + delay);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.7, t + delay + 0.5);
+
+                g.gain.setValueAtTime(0, t + delay);
+                g.gain.linearRampToValueAtTime(0.35, t + delay + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + delay + 0.6);
+
+                osc.connect(flt); flt.connect(g);
+                g.connect(rev); rev.connect(out);
+                g.connect(out);
+                osc.start(t + delay); osc.stop(t + delay + 0.7);
             });
         }
-    } catch(e) { console.warn('Sound error:', e); }
+    } catch(e) {}
 }
 
 // ── ANIMAÇÃO DO LOGO ───────────────────────────────────────────────────────
