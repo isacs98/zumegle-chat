@@ -21,38 +21,42 @@
   </defs>
   <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- Glow esquerda -->
+  <!-- Glow -->
   <radialGradient id="glow1" cx="20%" cy="40%" r="40%">
     <stop offset="0%" stop-color="#2563eb" stop-opacity="0.12"/>
     <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
   </radialGradient>
   <rect width="1200" height="630" fill="url(#glow1)"/>
 
-  <!-- Ícone grande -->
-  <rect x="80" y="200" width="160" height="160" rx="36" fill="url(#ic)"/>
-  <g transform="translate(80,200) scale(6.6) translate(1.5,1.5)">
+  <!-- Ícone — quadrado azul com balão centrado -->
+  <rect x="80" y="215" width="160" height="160" rx="36" fill="url(#ic)"/>
+  <!-- Balão de chat centrado dentro do quadrado: centro do quadrado = (160, 295) -->
+  <!-- Path original viewBox 0 0 24 24, queremos que fique 96x96 centralizado em 160,295 -->
+  <!-- scale = 96/24 = 4, translate para centrar: 160 - 12*4 = 112, 295 - 12*4 = 247 -->
+  <g transform="translate(112, 247) scale(4)">
     <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.6382 20 9.34757 19.721 8.18841 19.2218L3 21L4.7782 15.8116C4.279 14.6524 4 13.3618 4 12C4 7.02944 8.02944 3 13 3C17.9706 3 21 7.02944 21 11.5Z"
-      fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M9 9L15 9L9 15L15 15" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 9L15 9L9 15L15 15"
+      fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
   <!-- Nome -->
-  <text x="270" y="310" font-family="Arial Black, sans-serif" font-size="110" font-weight="900" fill="white" letter-spacing="-3">ZUEGLE</text>
+  <text x="270" y="320" font-family="Arial Black, sans-serif" font-size="110" font-weight="900" fill="white" letter-spacing="-3">ZUEGLE</text>
 
   <!-- Linha separadora -->
-  <rect x="80" y="390" width="1040" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
+  <rect x="80" y="410" width="1040" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
 
   <!-- Descrição -->
-  <text x="80" y="450" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.6)">O chat anônimo brasileiro. Converse com estranhos agora.</text>
+  <text x="80" y="470" font-family="Arial, sans-serif" font-size="34" fill="rgba(255,255,255,0.55)">O chat anônimo brasileiro. Converse com estranhos agora.</text>
 
   <!-- URL -->
-  <text x="80" y="550" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.3)">zumegle-chat.onrender.com</text>
+  <text x="80" y="560" font-family="Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.25)">zumegle-chat.onrender.com</text>
 
   <!-- Badge online -->
-  <circle cx="1120" cy="545" r="9" fill="#10b981"/>
-  <circle cx="1120" cy="545" r="9" fill="#10b981" opacity="0.4">
+  <circle cx="1120" cy="555" r="9" fill="#10b981"/>
+  <circle cx="1120" cy="555" r="9" fill="#10b981" opacity="0.4">
     <animate attributeName="r" from="9" to="18" dur="1.5s" repeatCount="indefinite"/>
     <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" repeatCount="indefinite"/>
   </circle>
-  <text x="1100" y="551" font-family="Arial, sans-serif" font-size="24" fill="#10b981" text-anchor="end">Online</text>
+  <text x="1100" y="561" font-family="Arial, sans-serif" font-size="24" fill="#10b981" text-anchor="end">Online</text>
 </svg>
