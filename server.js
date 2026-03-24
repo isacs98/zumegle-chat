@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const MSG_MAX_LENGTH = 500;
 const MAX_CONNECTIONS_PER_IP = 4;
-const SPAM_THRESHOLD = 100;
+const SPAM_THRESHOLD = 10;
 const TAGS_MAX = 10;
 const TAG_MAX_LENGTH = 30;
 const MAX_VIOLATIONS = 3;
@@ -85,6 +85,7 @@ let totalOnlineUsers = 0;
 
 setInterval(() => {
     reportedIPs.clear();
+    flaggedIPs.clear();
     console.log('🧹 Limpeza diária de memória efetuada.');
 }, 24 * 60 * 60 * 1000);
 
@@ -138,7 +139,12 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const secretKey = process.env.RECAPTCHA_SECRET_KEY || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+            const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+            if (!secretKey) {
+                console.error('⚠️  RECAPTCHA_SECRET_KEY não configurada! Defina a variável de ambiente no Render.');
+                socket.emit('system_message', 'Erro interno de configuração. Tenta novamente mais tarde.');
+                return;
+            }
             const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
 
             https.get(url, (res) => {
@@ -188,6 +194,14 @@ io.on('connection', (socket) => {
         if (matchIndex !== -1) {
             const partner = waitingQueue.splice(matchIndex, 1)[0];
             const partnerSocket = partner.socket;
+
+            // Garante que o socket do parceiro ainda está conectado
+            if (!io.sockets.sockets.get(partnerSocket.id)) {
+                // Parceiro desconectou entre entrar na fila e ser pareado — tenta novamente
+                executeMatchmaking(socket, tags);
+                return;
+            }
+
             const roomName = `room_${partnerSocket.id}_${socket.id}`;
 
             socket.join(roomName);
@@ -333,6 +347,9 @@ io.on('connection', (socket) => {
     }
 });
 
+// ─── HEALTH CHECK ────────────────────────────────────────────────────────────
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+
 // ─── PÁGINA 404 PERSONALIZADA ─────────────────────────────────────────────────
 app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
@@ -341,4 +358,16 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 Servidor a correr na porta ${PORT}`);
+});
+
+// ─── GRACEFUL SHUTDOWN (Render envia SIGTERM antes de derrubar) ───────────────
+process.on('SIGTERM', () => {
+    console.log('🛑 SIGTERM recebido. A encerrar conexões activas...');
+    io.emit('system_message', 'O servidor está a reiniciar. Por favor, reconecta em instantes.');
+    server.close(() => {
+        console.log('✅ Servidor encerrado com segurança.');
+        process.exit(0);
+    });
+    // Força saída após 10s se ainda houver conexões abertas
+    setTimeout(() => process.exit(0), 10000);
 });
