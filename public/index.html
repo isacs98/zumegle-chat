@@ -9,11 +9,13 @@
     <meta property="og:title" content="Zuegle — Chat Anônimo Brasileiro">
     <meta property="og:description" content="A forma mais rápida de conhecer novas pessoas online, sem registros.">
     <meta property="og:type" content="website">
-    
+    <!-- FIX: og:image adicionado -->
+    <meta property="og:image" content="/og-image.svg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Poppins com display=block — página fica invisível até fonte carregar, sem salto -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=block" rel="stylesheet">
+    <!-- FIX: display=swap evita FOIT (página invisível enquanto fonte carrega) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?onload=onCaptchaLoaded&render=explicit" async defer></script>
     
     <style>
@@ -22,13 +24,13 @@
         
         :root {
             /* TEMA DARK (Padrão Principal) - Vibe Gaming/Social */
-            --bg-base: #09090b; /* Preto muito profundo */
-            --bg-surface: #18181b; /* Cinza escuro para cards */
+            --bg-base: #09090b;
+            --bg-surface: #18181b;
             --bg-surface-hover: #27272a;
             
-            --brand-primary: #8b5cf6; /* Roxo Vibrante */
+            --brand-primary: #8b5cf6;
             --brand-primary-hover: #7c3aed;
-            --brand-secondary: #06b6d4; /* Ciano Neon */
+            --brand-secondary: #06b6d4;
             
             --text-title: #ffffff;
             --text-body: #a1a1aa;
@@ -49,7 +51,6 @@
         }
 
         html.light {
-            /* TEMA LIGHT - Clean, alto contraste */
             --bg-base: #f4f4f5;
             --bg-surface: #ffffff;
             --bg-surface-hover: #f1f5f9;
@@ -81,7 +82,6 @@
             position: relative;
         }
 
-        /* Padrão de fundo rico (Grelha visível nos dois temas) */
         body::before {
             content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
             background-image: linear-gradient(rgba(113, 113, 122, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(113, 113, 122, 0.15) 1px, transparent 1px);
@@ -93,7 +93,7 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; border: 2px solid var(--bg-base); }
         ::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
 
-        /* HEADER SÓLIDO E DETALHADO */
+        /* HEADER */
         #hdr {
             background-color: var(--bg-surface);
             border-bottom: 2px solid var(--border-light);
@@ -108,8 +108,6 @@
         }
         
         .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; cursor: pointer; }
-        
-        /* Novo Ícone de Logo Detalhado */
         .logo-ic {
             width: 44px; height: 44px;
             background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
@@ -122,8 +120,6 @@
         }
         .logo:hover .logo-ic { transform: rotate(0deg) scale(1.05); }
         .logo-ic svg { fill: none; width: 24px; height: 24px; }
-        
-        /* Nome Estilizado e Unificado (Cor única) */
         .logo-tx { 
             font-family: var(--font-head); font-size: 26px; font-weight: 900; 
             letter-spacing: -0.5px; color: var(--text-title); text-transform: uppercase;
@@ -131,8 +127,6 @@
         }
         
         .hdr-r { display: flex; align-items: center; gap: 20px; }
-        
-        /* Badge de Status Robusto */
         .badge-on {
             display: flex; align-items: center; gap: 10px;
             background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
@@ -149,30 +143,23 @@
         }
         .btn-th:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
 
-        /* SCROLL ÁREA PRINCIPAL */
         #scroll { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; scroll-behavior: smooth; }
 
-        /* AD */
         .ad { background: var(--bg-surface); text-align: center; padding: 12px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border-light); }
 
-        /* LANDING PAGE - LAYOUT RICO E PREENCHIDO */
         #land { display: flex; flex-direction: column; align-items: center; width: 100%; padding-bottom: 60px; }
         
-        /* HERO SECTION COM IMAGEM */
         .hero-section {
             display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px;
             max-width: 1200px; width: 100%; padding: 60px 32px;
         }
-        
         .hero-text { display: flex; flex-direction: column; align-items: flex-start; }
-        
         .hero-tag {
             background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
             color: #fff; padding: 6px 16px; border-radius: 6px; font-family: var(--font-head);
             font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
             margin-bottom: 24px; box-shadow: var(--shadow-brand);
         }
-        
         .hero-text h1 {
             font-family: var(--font-head); font-size: clamp(40px, 5vw, 68px); font-weight: 900;
             line-height: 1.1; color: var(--text-title); margin-bottom: 24px; letter-spacing: -2px;
@@ -180,8 +167,6 @@
         .hero-text p {
             font-size: 18px; line-height: 1.6; color: var(--text-body); margin-bottom: 32px; max-width: 480px;
         }
-
-        /* Imagem Rica no Hero (Pessoas a conversar) */
         .hero-visual {
             position: relative; width: 100%; height: 450px; border-radius: 24px;
             overflow: hidden; box-shadow: var(--shadow-card);
@@ -197,17 +182,14 @@
             opacity: 0.8;
         }
 
-        /* ÁREA DE AÇÃO (FORMULÁRIO SÓLIDO) */
         .action-area {
             max-width: 800px; width: 100%; background: var(--bg-surface);
             border: 2px solid var(--border-color); border-radius: 20px;
             padding: 40px; box-shadow: var(--shadow-card);
             margin-top: -40px; z-index: 10; position: relative;
         }
-        
         .lbl { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text-title); margin-bottom: 16px; }
         .lbl small { font-family: var(--font-body); font-weight: 400; color: var(--text-muted); font-size: 14px; margin-left: 8px; }
-        
         .inp-w { position: relative; margin-bottom: 16px; }
         .inp-ic { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         #tags-input {
@@ -227,7 +209,6 @@
         }
         .btn-go:hover { background: var(--brand-primary-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4); }
 
-        /* NOVA SECÇÃO: INFORMAÇÕES DETALHADAS */
         .info-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
             max-width: 1200px; width: 100%; padding: 80px 32px;
@@ -237,7 +218,6 @@
         .info-card h3 { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--text-title); margin-bottom: 12px; }
         .info-card p { font-size: 15px; line-height: 1.6; color: var(--text-body); }
 
-        /* RODAPÉ ESTRUTURADO */
         #foot { background: var(--bg-surface); border-top: 2px solid var(--border-color); padding: 60px 32px 32px; margin-top: auto; }
         .foot-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 32px; }
         .don-box { text-align: center; background: var(--bg-base); padding: 32px; border-radius: 16px; width: 100%; max-width: 600px; border: 1px dashed var(--border-color); }
@@ -249,30 +229,24 @@
         .foot-links button:hover { color: var(--brand-primary); }
         .foot-copy { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-        /* MODAIS SÓLIDOS */
+        /* MODAIS */
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .overlay.on { display: flex; animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         .mbox { background: var(--bg-surface); border: 2px solid var(--border-color); border-radius: 16px; max-width: 560px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
         .mbox.wide { max-width: 800px; }
-        
         .mhdr { padding: 32px 32px 24px; border-bottom: 2px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
         .mtitle { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--text-title); display: flex; align-items: center; gap: 12px; }
         .mcls { width: 40px; height: 40px; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-base); cursor: pointer; color: var(--text-muted); font-weight: bold; font-size: 18px; transition: 0.2s; }
         .mcls:hover { background: var(--status-danger); color: #fff; border-color: var(--status-danger); }
-        
         .mbody { padding: 32px; overflow-y: auto; color: var(--text-body); font-size: 15px; line-height: 1.6; }
         .mfoot { padding: 24px 32px; border-top: 2px solid var(--border-light); background: var(--bg-base); display: flex; flex-direction: column; gap: 20px; border-radius: 0 0 14px 14px; }
-        
         .t-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
         .t-list li { display: flex; gap: 16px; align-items: flex-start; background: var(--bg-base); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .t-list li strong { display: block; color: var(--text-title); font-size: 16px; margin-bottom: 4px; font-family: var(--font-head); }
-        
         .chk-row { display: flex; align-items: center; gap: 12px; cursor: pointer; background: var(--bg-surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
         .chk-row input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--brand-primary); cursor: pointer; }
         .chk-row span { font-size: 15px; font-weight: 600; color: var(--text-title); }
-        
         .macts { display: flex; gap: 16px; justify-content: flex-end; }
         .btn-sec, .btn-pri { padding: 14px 28px; border-radius: 8px; font-family: var(--font-head); font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
         .btn-sec { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); }
@@ -281,63 +255,47 @@
         .btn-pri:hover:not(:disabled) { background: var(--brand-primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-brand); }
         .btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* INTERFACE DE CHAT ROBUSTA (Estilo Discord/Twitch) */
+        /* INTERFACE DE CHAT */
         #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); }
         #chat.on { display: flex; }
-        
-        /* Cabeçalho Interno do Chat */
         .chat-header {
             background: var(--bg-surface); padding: 16px 32px; border-bottom: 2px solid var(--border-color);
             display: flex; align-items: center; gap: 12px; flex-shrink: 0;
         }
         .chat-header h2 { font-family: var(--font-head); font-size: 18px; color: var(--text-title); }
         .chat-header .status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--status-online); }
-        
         #chatbox { flex-grow: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 20px; }
-        
         .sys { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--text-muted); text-align: center; padding: 8px 16px; background: var(--bg-surface); border-radius: 8px; align-self: center; text-transform: uppercase; letter-spacing: 1px; }
         .sys.alert { color: var(--status-danger); border: 1px solid rgba(239,68,68,0.3); }
-        
         .mrow { display: flex; flex-direction: column; gap: 6px; max-width: 85%; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .mrow.you { align-self: flex-end; align-items: flex-end; }
         .mrow.str { align-self: flex-start; align-items: flex-start; }
-        
-        /* Nomes acima das bolhas */
         .mlbl { font-family: var(--font-head); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; }
         .mrow.you .mlbl { color: var(--brand-primary); }
         .mrow.str .mlbl { color: var(--brand-secondary); }
-        
         .mbub { padding: 16px 20px; border-radius: 12px; font-size: 16px; line-height: 1.6; font-weight: 500; }
         .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-right-radius: 0; }
         .mrow.str .mbub { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); border-bottom-left-radius: 0; }
-        
         #typing { display: none; align-self: flex-start; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 12px 20px; border-radius: 12px; border: 2px solid var(--border-color); }
         #typing.on { display: flex; }
         .tdots span { display: inline-block; width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; margin: 0 2px; animation: bounce 1s infinite; }
         .tdots span:nth-child(2) { animation-delay: 0.2s; }
         .tdots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); background: var(--brand-primary); } }
-
-        /* BARRA DE MENSAGENS ESTRUTURADA */
         #bar { padding: 24px 32px; background: var(--bg-surface); border-top: 2px solid var(--border-color); display: flex; gap: 16px; align-items: flex-end; }
-        
         .btn-stop-c { padding: 0 24px; height: 56px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text-title); cursor: pointer; transition: 0.2s; text-transform: uppercase; }
         .btn-stop-c:hover { border-color: var(--status-danger); color: var(--status-danger); }
         .btn-stop-c.nc { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
         .btn-stop-c.nc:hover { background: var(--brand-primary-hover); }
-        
         .inpw { flex-grow: 1; position: relative; }
         #msg { width: 100%; padding: 16px 70px 16px 20px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-body); font-size: 16px; color: var(--text-title); resize: none; outline: none; max-height: 150px; line-height: 1.5; transition: border-color 0.2s; }
         #msg:focus { border-color: var(--brand-primary); }
         #msg:disabled { opacity: 0.5; background: var(--border-light); cursor: not-allowed; }
         #cc { position: absolute; bottom: -22px; right: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); display: none; }
-        
         .btn-send-c { position: absolute; right: 8px; bottom: 8px; width: 40px; height: 40px; background: var(--brand-primary); border: none; border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .btn-send-c:hover:not(:disabled) { background: var(--brand-primary-hover); transform: scale(1.05); }
         .btn-send-c:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
-        
         .btn-rep { width: 56px; height: 56px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .btn-rep:hover:not(:disabled) { border-color: var(--status-danger); color: var(--status-danger); background: rgba(239, 68, 68, 0.1); }
         .btn-rep:disabled { opacity: 0.3; cursor: not-allowed; }
@@ -349,7 +307,6 @@
             .info-grid { grid-template-columns: 1fr; }
             .action-area { margin-top: 0; border-radius: 0; border-left: none; border-right: none; border-bottom: none; }
         }
-
         @media (max-width: 600px) {
             #hdr { padding: 0 16px; height: 64px; }
             .hero-text h1 { font-size: 36px; }
@@ -392,7 +349,6 @@
 <div id="scroll">
 
     <main id="land">
-        <!-- HERO SECTION COM IMAGEM -->
         <section class="hero-section">
             <div class="hero-text">
                 <div class="hero-tag">Comunidade Aberta</div>
@@ -400,26 +356,96 @@
                 <p>Junte-se a milhares de usuários agora mesmo. Sem perfis, sem barreiras. Apenas conversas reais, rápidas e totalmente seguras.</p>
             </div>
             <div class="hero-visual">
-                <!-- Imagem rica representando o lado social/jovem da plataforma -->
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Grupo de jovens conversando e sorrindo">
+                <!-- Ilustração SVG inline — sem dependência de CDN externo -->
+                <svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                    <defs>
+                        <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#18181b"/>
+                            <stop offset="100%" style="stop-color:#09090b"/>
+                        </linearGradient>
+                        <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8b5cf6"/>
+                            <stop offset="100%" style="stop-color:#06b6d4"/>
+                        </linearGradient>
+                        <linearGradient id="bubble-you" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8b5cf6"/>
+                            <stop offset="100%" style="stop-color:#7c3aed"/>
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="8" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Fundo -->
+                    <rect width="600" height="450" fill="url(#bg-grad)" rx="20"/>
+                    <!-- Grid de fundo -->
+                    <g stroke="#3f3f46" stroke-width="0.5" opacity="0.4">
+                        <line x1="0" y1="50" x2="600" y2="50"/><line x1="0" y1="100" x2="600" y2="100"/>
+                        <line x1="0" y1="150" x2="600" y2="150"/><line x1="0" y1="200" x2="600" y2="200"/>
+                        <line x1="0" y1="250" x2="600" y2="250"/><line x1="0" y1="300" x2="600" y2="300"/>
+                        <line x1="0" y1="350" x2="600" y2="350"/><line x1="0" y1="400" x2="600" y2="400"/>
+                        <line x1="50" y1="0" x2="50" y2="450"/><line x1="100" y1="0" x2="100" y2="450"/>
+                        <line x1="150" y1="0" x2="150" y2="450"/><line x1="200" y1="0" x2="200" y2="450"/>
+                        <line x1="250" y1="0" x2="250" y2="450"/><line x1="300" y1="0" x2="300" y2="450"/>
+                        <line x1="350" y1="0" x2="350" y2="450"/><line x1="400" y1="0" x2="400" y2="450"/>
+                        <line x1="450" y1="0" x2="450" y2="450"/><line x1="500" y1="0" x2="500" y2="450"/>
+                        <line x1="550" y1="0" x2="550" y2="450"/>
+                    </g>
+                    <!-- Glows de fundo -->
+                    <circle cx="150" cy="200" r="120" fill="#8b5cf6" opacity="0.06" filter="url(#glow)"/>
+                    <circle cx="480" cy="280" r="100" fill="#06b6d4" opacity="0.06" filter="url(#glow)"/>
+                    <!-- Avatar esquerdo -->
+                    <circle cx="130" cy="160" r="38" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
+                    <circle cx="130" cy="148" r="14" fill="#8b5cf6"/>
+                    <path d="M100 185 Q130 175 160 185 Q160 200 130 198 Q100 200 100 185Z" fill="#8b5cf6" opacity="0.8"/>
+                    <!-- Avatar direito -->
+                    <circle cx="470" cy="160" r="38" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
+                    <circle cx="470" cy="148" r="14" fill="#06b6d4"/>
+                    <path d="M440 185 Q470 175 500 185 Q500 200 470 198 Q440 200 440 185Z" fill="#06b6d4" opacity="0.8"/>
+                    <!-- Bolha mensagem — esquerda (você) -->
+                    <rect x="60" y="218" width="200" height="48" rx="14" fill="url(#bubble-you)"/>
+                    <rect x="60" y="250" width="20" height="20" rx="4" fill="url(#bubble-you)"/>
+                    <text x="80" y="248" font-family="Inter,sans-serif" font-size="13" fill="white" font-weight="600">Oi! De onde você é? 👋</text>
+                    <!-- Bolha mensagem — direita (parceiro) -->
+                    <rect x="340" y="218" width="200" height="48" rx="14" fill="#27272a" stroke="#3f3f46" stroke-width="1.5"/>
+                    <rect x="520" y="250" width="20" height="20" rx="4" fill="#27272a"/>
+                    <text x="358" y="248" font-family="Inter,sans-serif" font-size="13" fill="#e4e4e7" font-weight="600">Sou do Brasil! E você? 🇧🇷</text>
+                    <!-- Bolha mensagem — esquerda 2 -->
+                    <rect x="60" y="285" width="170" height="44" rx="14" fill="url(#bubble-you)"/>
+                    <rect x="60" y="315" width="20" height="18" rx="4" fill="url(#bubble-you)"/>
+                    <text x="80" y="312" font-family="Inter,sans-serif" font-size="13" fill="white" font-weight="600">Que coincidência! 😄</text>
+                    <!-- Typing indicator -->
+                    <rect x="340" y="285" width="100" height="40" rx="14" fill="#27272a" stroke="#3f3f46" stroke-width="1.5"/>
+                    <circle cx="368" cy="305" r="5" fill="#71717a"><animate attributeName="cy" values="305;299;305" dur="0.8s" repeatCount="indefinite" begin="0s"/></circle>
+                    <circle cx="390" cy="305" r="5" fill="#71717a"><animate attributeName="cy" values="305;299;305" dur="0.8s" repeatCount="indefinite" begin="0.2s"/></circle>
+                    <circle cx="412" cy="305" r="5" fill="#71717a"><animate attributeName="cy" values="305;299;305" dur="0.8s" repeatCount="indefinite" begin="0.4s"/></circle>
+                    <!-- Linha conectando os dois avatares -->
+                    <line x1="168" y1="160" x2="432" y2="160" stroke="url(#purple-grad)" stroke-width="2" stroke-dasharray="6,4" opacity="0.5"/>
+                    <circle cx="300" cy="160" r="16" fill="#27272a" stroke="url(#purple-grad)" stroke-width="2"/>
+                    <text x="300" y="165" font-family="Inter,sans-serif" font-size="11" fill="#8b5cf6" font-weight="800" text-anchor="middle">Z</text>
+                    <!-- Badge online -->
+                    <rect x="220" y="60" width="160" height="34" rx="17" fill="#27272a" stroke="#3f3f46" stroke-width="1.5"/>
+                    <circle cx="244" cy="77" r="6" fill="#10b981"><animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/></circle>
+                    <text x="258" y="82" font-family="Inter,sans-serif" font-size="13" fill="#10b981" font-weight="700">12.847 ONLINE</text>
+                    <!-- Rodapé decorativo -->
+                    <rect x="0" y="400" width="600" height="50" fill="url(#bg-grad)" opacity="0.8"/>
+                    <text x="300" y="430" font-family="Inter,sans-serif" font-size="12" fill="#3f3f46" text-anchor="middle" font-weight="600">CHAT ANÔNIMO · SEM REGISTRO · 100% GRATUITO</text>
+                </svg>
             </div>
         </section>
 
-        <!-- FORMULÁRIO SÓLIDO (ACTION AREA) -->
         <section class="action-area">
             <div class="lbl">De que quer falar hoje? <small>(Opcional, mas recomendado)</small></div>
             <div class="inp-w">
                 <svg class="inp-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                 <input type="text" id="tags-input" placeholder="Ex: anime, programação, música, esportes...">
             </div>
-            
             <button class="btn-go" onclick="openTermsModal()">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 Entrar no Bate-Papo
             </button>
         </section>
 
-        <!-- GRID DE INFORMAÇÕES DETALHADAS -->
         <section class="info-grid">
             <div class="info-card">
                 <div class="info-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
@@ -437,10 +463,8 @@
                 <p>Apesar de anônimo, o Zuegle não é terra sem lei. Prezamos pelo respeito mútuo para garantir que a experiência seja sempre agradável, livre de toxicidade e segura para todos.</p>
             </div>
         </section>
-
     </main>
 
-    <!-- RODAPÉ ESTRUTURADO -->
     <footer id="foot">
         <div class="foot-content">
             <div class="don-box">
@@ -448,7 +472,6 @@
                 <p style="color:var(--text-body); font-size:15px">Manter a infraestrutura rápida e segura custa caro. Se você gosta do projeto, considere apoiar o nosso trabalho.</p>
                 <button class="btn-don">Contribuir com o Projeto</button>
             </div>
-            
             <div class="foot-links">
                 <button onclick="openInfoModal('faqs')">Perguntas Frequentes</button>
                 <button onclick="openInfoModal('rules')">Regras da Comunidade</button>
@@ -456,13 +479,12 @@
                 <button onclick="openInfoModal('terms')">Termos Legais</button>
                 <button onclick="openInfoModal('privacy')">Privacidade</button>
             </div>
-            
             <div class="foot-copy">© Zuegle Inc. 2026. Desenvolvido para a Comunidade Brasileira.</div>
         </div>
     </footer>
 </div>
 
-<!-- MODAL DE TERMOS (Acordo de Uso Atualizado) -->
+<!-- MODAL DE TERMOS -->
 <div id="terms-modal" class="overlay">
     <div class="mbox">
         <div class="mhdr">
@@ -503,7 +525,7 @@
     </div>
 </div>
 
-<!-- INFO MODAL (Para páginas do Footer) -->
+<!-- INFO MODAL -->
 <div id="info-modal" class="overlay">
     <div class="mbox wide">
         <div class="mhdr">
@@ -539,10 +561,7 @@
         <h2>Sessão Ativa</h2>
         <div style="margin-left:auto" class="status"><div class="dot"></div> Protegido</div>
     </div>
-    
     <div id="chatbox"></div>
-    
-    <!-- Bolha de Digitação Estilizada -->
     <div style="padding: 0 32px">
         <div id="typing">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
@@ -550,7 +569,6 @@
             <div class="tdots"><span></span><span></span><span></span></div>
         </div>
     </div>
-    
     <div id="bar">
         <button id="btn-stop" class="btn-stop-c" onclick="handleStopButton()">Parar</button>
         <div class="inpw">
@@ -568,434 +586,359 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-// TEMA
+// ── TEMA ──────────────────────────────────────────────────────────────────────
 function applyTheme(t){
-    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.remove('dark','light');
     document.documentElement.classList.add(t);
-    document.getElementById('ic-sun').style.display=t==='dark'?'block':'none';
-    document.getElementById('ic-moon').style.display=t==='dark'?'none':'block';
+    document.getElementById('ic-sun').style.display  = t==='dark' ? 'block' : 'none';
+    document.getElementById('ic-moon').style.display = t==='dark' ? 'none'  : 'block';
 }
 function toggleTheme(){
-    const t=document.documentElement.classList.contains('dark')?'light':'dark';
-    localStorage.setItem('theme',t);applyTheme(t);
+    const t = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    localStorage.setItem('theme', t);
+    applyTheme(t);
 }
-// Modo Escuro como padrão
-const savedTheme=localStorage.getItem('theme') || 'dark';
-applyTheme(savedTheme);
+applyTheme(localStorage.getItem('theme') || 'dark');
 
-// FOOTER MODALS - Toda a documentação inserida e estilizada com o Design System
-const footerContent={
+// ── FOOTER MODALS ─────────────────────────────────────────────────────────────
+const footerContent = {
     faqs: {
         title: 'Perguntas Frequentes (FAQs)',
         content: `
             <div style="display:flex;flex-direction:column;gap:24px">
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">1. O que é o Zuegle?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma brasileira de chat anônimo e aleatório em tempo real. Nossa tecnologia conecta dois usuários desconhecidos instantaneamente para uma conversa privada de texto. Não existe perfil, histórico ou identidade — apenas você e um estranho do outro lado.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">2. Preciso criar uma conta?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Não. O Zuegle não exige cadastro, e-mail, número de telefone ou qualquer forma de registro. Basta acessar o site, concordar com os Termos de Uso e iniciar o chat imediatamente.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">3. Como funciona o sistema de interesses?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Antes de iniciar, você pode digitar palavras-chave separadas por vírgula como "música, games, animes". Nosso sistema tenta conectar você a outro usuário que digitou interesses em comum. Caso não encontre ninguém compatível em tempo hábil, conectamos com qualquer pessoa disponível para evitar espera prolongada.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">4. As minhas mensagens são salvas?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Não. O Zuegle opera com política de zero armazenamento de conversas. Quando a conversa termina, ela desaparece permanentemente — não existe forma alguma de recuperá-la.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">5. O Zuegle é seguro?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Possuímos múltiplas camadas de proteção que operam de forma contínua e silenciosa para manter a plataforma segura. Recomendamos ainda que nunca compartilhe dados pessoais como nome completo, endereço, telefone ou informações financeiras com estranhos.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">6. O que fazer se encontrar um usuário abusivo?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Clique imediatamente no botão Reportar na tela de chat. Isso encerra a conversa e aciona nossos sistemas de moderação automaticamente. Múltiplas denúncias contra o mesmo usuário resultam em bloqueio permanente.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">7. Por que fui bloqueado?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Bloqueios são aplicados pelo nosso sistema de moderação automática quando detectamos violações dos Termos de Serviço. Caso acredite que foi bloqueado por engano, entre em contato pelo e-mail appeals@zuegle.com</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">8. O site é gratuito?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Sim, completamente. O Zuegle não possui planos pagos, funcionalidades premium ou cobranças ocultas. Nos sustentamos através de publicidade não intrusiva e doações voluntárias da comunidade.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">9. Posso usar no celular?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Sim. O Zuegle foi desenvolvido com design responsivo e funciona perfeitamente em smartphones e tablets nos principais navegadores modernos.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">10. Por que às vezes demora para encontrar alguém?</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O tempo de espera depende do número de usuários online no momento. O contador na tela mostra há quantos segundos você aguarda. Nos horários de pico, a conexão é quase instantânea.</p>
-                </div>
-            </div>
-        `
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">1. O que é o Zuegle?</strong><p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma brasileira de chat anônimo e aleatório em tempo real. Nossa tecnologia conecta dois usuários desconhecidos instantaneamente para uma conversa privada de texto. Não existe perfil, histórico ou identidade — apenas você e um estranho do outro lado.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">2. Preciso criar uma conta?</strong><p style="color:var(--text-body);line-height:1.6">Não. O Zuegle não exige cadastro, e-mail, número de telefone ou qualquer forma de registro. Basta acessar o site, concordar com os Termos de Uso e iniciar o chat imediatamente.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">3. Como funciona o sistema de interesses?</strong><p style="color:var(--text-body);line-height:1.6">Antes de iniciar, você pode digitar palavras-chave separadas por vírgula como "música, games, animes". Nosso sistema tenta conectar você a outro usuário que digitou interesses em comum. Caso não encontre ninguém compatível, conectamos com qualquer pessoa disponível para evitar espera prolongada.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">4. As minhas mensagens são salvas?</strong><p style="color:var(--text-body);line-height:1.6">Não. O Zuegle opera com política de zero armazenamento de conversas. Quando a conversa termina, ela desaparece permanentemente.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">5. O Zuegle é seguro?</strong><p style="color:var(--text-body);line-height:1.6">Possuímos múltiplas camadas de proteção que operam de forma contínua e silenciosa para manter a plataforma segura. Recomendamos que nunca compartilhe dados pessoais com estranhos.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">6. O que fazer se encontrar um usuário abusivo?</strong><p style="color:var(--text-body);line-height:1.6">Clique imediatamente no botão Reportar na tela de chat. Isso encerra a conversa e aciona nossos sistemas de moderação automaticamente.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">7. Por que fui bloqueado?</strong><p style="color:var(--text-body);line-height:1.6">Bloqueios são aplicados pelo nosso sistema de moderação automática quando detectamos violações dos Termos de Serviço. Caso acredite que foi bloqueado por engano, entre em contato pelo e-mail appeals@zuegle.com</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">8. O site é gratuito?</strong><p style="color:var(--text-body);line-height:1.6">Sim, completamente. Nos sustentamos através de publicidade não intrusiva e doações voluntárias da comunidade.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">9. Posso usar no celular?</strong><p style="color:var(--text-body);line-height:1.6">Sim. O Zuegle foi desenvolvido com design responsivo e funciona perfeitamente em smartphones e tablets.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">10. Por que às vezes demora para encontrar alguém?</strong><p style="color:var(--text-body);line-height:1.6">O tempo de espera depende do número de usuários online. Nos horários de pico, a conexão é quase instantânea.</p></div>
+            </div>`
     },
     rules: {
         title: 'Regras da Comunidade (Rules)',
         content: `
             <div style="display:flex;flex-direction:column;gap:16px">
-                <div style="background:rgba(239, 68, 68, 0.1);border:1px solid var(--status-danger);padding:20px;border-radius:12px;margin-bottom:16px">
-                    <strong style="color:var(--status-danger); font-size:18px;">Aviso de Tolerância Zero</strong>
-                    <p style="margin-top:8px;color:var(--text-body);line-height:1.6">O descumprimento das regras abaixo resultará no bloqueio permanente do acesso à plataforma, sem direito a recurso.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 1 — Maioridade Obrigatória</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma exclusiva para maiores de 18 anos. Ao acessar, você declara legalmente ter atingido essa idade. O acesso por menores constitui violação grave e será tratado com o máximo rigor.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 2 — Proibição Absoluta de Conteúdo Ilegal</strong>
-                    <p style="color:var(--text-body);line-height:1.6">É estritamente proibido utilizar o Zuegle para discutir, planejar, incitar ou distribuir qualquer conteúdo ilegal, incluindo: exploração e abuso infantil, tráfico de drogas ou armas, terrorismo e extremismo violento, extorsão e ameaças, lavagem de dinheiro, documentos ou identidades falsas, e invasão de sistemas. Esses casos são reportados às autoridades com todos os metadados disponíveis.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 3 — Respeito e Conduta</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O anonimato não é escudo para a toxicidade. São proibidos: insultos de natureza racial, étnica, religiosa ou de gênero, assédio sexual ou intimidação, ameaças de qualquer natureza, bullying e humilhação, e exposição de dados pessoais de terceiros.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 4 — Proibição de Spam e Publicidade</strong>
-                    <p style="color:var(--text-body);line-height:1.6">São proibidos: divulgação de redes sociais de qualquer tipo, venda de produtos ou serviços, compartilhamento de links externos, divulgação de conteúdo adulto pago, e uso de automação ou scripts.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 5 — Uso Responsável do Botão Reportar</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O botão Reportar existe para proteger a comunidade. Use-o sempre que encontrar comportamento abusivo. O uso indevido deste recurso também é monitorado.</p>
-                </div>
-            </div>
-        `
+                <div style="background:rgba(239,68,68,0.1);border:1px solid var(--status-danger);padding:20px;border-radius:12px;margin-bottom:16px"><strong style="color:var(--status-danger);font-size:18px;">Aviso de Tolerância Zero</strong><p style="margin-top:8px;color:var(--text-body);line-height:1.6">O descumprimento das regras abaixo resultará no bloqueio permanente do acesso à plataforma, sem direito a recurso.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 1 — Maioridade Obrigatória</strong><p style="color:var(--text-body);line-height:1.6">O Zuegle é uma plataforma exclusiva para maiores de 18 anos. Ao acessar, você declara legalmente ter atingido essa idade.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 2 — Proibição Absoluta de Conteúdo Ilegal</strong><p style="color:var(--text-body);line-height:1.6">É estritamente proibido utilizar o Zuegle para discutir, planejar, incitar ou distribuir qualquer conteúdo ilegal, incluindo: exploração e abuso infantil, tráfico de drogas ou armas, terrorismo, extorsão, lavagem de dinheiro, documentos falsos e invasão de sistemas.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 3 — Respeito e Conduta</strong><p style="color:var(--text-body);line-height:1.6">O anonimato não é escudo para a toxicidade. São proibidos: insultos de natureza racial, étnica, religiosa ou de gênero, assédio sexual ou intimidação, ameaças de qualquer natureza, bullying e humilhação.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 4 — Proibição de Spam e Publicidade</strong><p style="color:var(--text-body);line-height:1.6">São proibidos: divulgação de redes sociais, venda de produtos ou serviços, compartilhamento de links externos e uso de automação ou scripts.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Regra 5 — Uso Responsável do Botão Reportar</strong><p style="color:var(--text-body);line-height:1.6">O botão Reportar existe para proteger a comunidade. Use-o sempre que encontrar comportamento abusivo. O uso indevido deste recurso também é monitorado.</p></div>
+            </div>`
     },
     support: {
         title: 'Suporte (Support)',
         content: `
             <div style="display:flex;flex-direction:column;gap:16px">
-                <p style="margin-bottom:16px;line-height:1.6"><strong>Como podemos ajudar?</strong><br>Nossa equipe está disponível para resolver problemas técnicos, esclarecer dúvidas e tratar casos de abuso. Escolha o canal adequado:</p>
-                
-                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px">
-                    <strong style="color:var(--brand-primary);font-size:18px;display:block;margin-bottom:8px">Suporte Geral</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Para dúvidas técnicas, problemas de acesso ou sugestões:<br><strong style="color:var(--text-title)">suporte@zuegle.com</strong><br>Tempo de resposta: 48 a 72 horas úteis</p>
-                </div>
-
-                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px">
-                    <strong style="color:var(--status-danger);font-size:18px;display:block;margin-bottom:8px">Segurança e Crimes</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Para denúncias envolvendo conteúdo ilegal ou ameaças graves:<br><strong style="color:var(--text-title)">safety@zuegle.com</strong><br>Casos urgentes são priorizados.</p>
-                </div>
-
-                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:24px">
-                    <strong style="color:var(--status-warning);font-size:18px;display:block;margin-bottom:8px">Apelação de Bloqueio</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Se acredita ter sido bloqueado por engano:<br><strong style="color:var(--text-title)">appeals@zuegle.com</strong><br>Descreva detalhadamente a situação. Analisamos em até 5 dias úteis.</p>
-                </div>
-
-                <div style="background:rgba(245, 158, 11, 0.1);border:1px solid var(--status-warning);padding:20px;border-radius:12px;">
-                    <strong style="color:var(--status-warning);font-size:18px;">Importante</strong>
-                    <p style="margin-top:8px;color:var(--text-body);line-height:1.6">Devido à nossa arquitetura de zero armazenamento de mensagens, não é possível recuperar conversas após o encerramento. Sempre utilize o botão Reportar durante a conversa — é o método mais eficaz de proteção da comunidade.</p>
-                </div>
-            </div>
-        `
+                <p style="margin-bottom:16px;line-height:1.6"><strong>Como podemos ajudar?</strong><br>Nossa equipe está disponível para resolver problemas técnicos, esclarecer dúvidas e tratar casos de abuso.</p>
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px"><strong style="color:var(--brand-primary);font-size:18px;display:block;margin-bottom:8px">Suporte Geral</strong><p style="color:var(--text-body);line-height:1.6">Para dúvidas técnicas, problemas de acesso ou sugestões:<br><strong style="color:var(--text-title)">suporte@zuegle.com</strong><br>Tempo de resposta: 48 a 72 horas úteis</p></div>
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:16px"><strong style="color:var(--status-danger);font-size:18px;display:block;margin-bottom:8px">Segurança e Crimes</strong><p style="color:var(--text-body);line-height:1.6">Para denúncias envolvendo conteúdo ilegal ou ameaças graves:<br><strong style="color:var(--text-title)">safety@zuegle.com</strong><br>Casos urgentes são priorizados.</p></div>
+                <div style="background:var(--bg-base);border:1px solid var(--border-color);padding:24px;border-radius:16px;margin-bottom:24px"><strong style="color:var(--status-warning);font-size:18px;display:block;margin-bottom:8px">Apelação de Bloqueio</strong><p style="color:var(--text-body);line-height:1.6">Se acredita ter sido bloqueado por engano:<br><strong style="color:var(--text-title)">appeals@zuegle.com</strong><br>Analisamos em até 5 dias úteis.</p></div>
+                <div style="background:rgba(245,158,11,0.1);border:1px solid var(--status-warning);padding:20px;border-radius:12px;"><strong style="color:var(--status-warning);font-size:18px;">Importante</strong><p style="margin-top:8px;color:var(--text-body);line-height:1.6">Devido à nossa arquitetura de zero armazenamento de mensagens, não é possível recuperar conversas após o encerramento. Sempre utilize o botão Reportar durante a conversa.</p></div>
+            </div>`
     },
     terms: {
         title: 'Termos e Condições (Terms)',
         content: `
             <div style="display:flex;flex-direction:column;gap:24px">
                 <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Data de vigência: 21 de março de 2026</p>
-                
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 1 — Aceitação e Descrição do Serviço</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O presente acordo rege o acesso e uso dos serviços fornecidos pela Zuegle Inc. O Zuegle é um serviço de comunicação em tempo real que possibilita a troca anônima de mensagens de texto entre usuários. O serviço é fornecido "tal como está" e "conforme disponível". Ao acessar o Zuegle, você concorda integralmente com estes termos.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 2 — Elegibilidade</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O uso do Zuegle é permitido exclusivamente a pessoas com 18 anos ou mais. Ao utilizar a plataforma, você declara, sob responsabilidade legal, ter atingido essa idade. A Zuegle Inc. não se responsabiliza pelo acesso indevido por menores.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 3 — Licença de Uso</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Concedemos ao usuário uma licença limitada, não exclusiva, revogável e intransferível para uso pessoal e não comercial do Zuegle. É expressamente proibido: descompilar ou aplicar engenharia reversa na plataforma, utilizar automação ou scripts para interagir com o serviço, sobrecarregar ou atacar a infraestrutura, e usar a plataforma para fins comerciais sem autorização expressa.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 4 — Conduta do Usuário</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Você é inteiramente responsável pelo conteúdo que transmite através do Zuegle. É proibido transmitir qualquer conteúdo ilegal, abusivo, ameaçador, difamatório ou que viole direitos de terceiros. A Zuegle Inc. reserva-se o direito de bloquear imediatamente qualquer usuário que viole estas diretrizes.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 5 — Isenção de Responsabilidade</strong>
-                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. não se responsabiliza pelo conteúdo gerado pelos usuários. Na extensão máxima permitida pela lei, a Zuegle Inc. não será responsabilizada por danos diretos, indiretos, incidentais ou consequenciais resultantes do uso da plataforma. O usuário assume integralmente os riscos associados à interação com estranhos.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 6 — Modificações e Rescisão</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Reservamo-nos o direito de modificar estes termos, as funcionalidades da plataforma ou encerrar o serviço a qualquer momento, sem aviso prévio. Também podemos suspender ou bloquear qualquer usuário sem obrigação de justificativa.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 7 — Indenização</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Você concorda em isentar e indenizar a Zuegle Inc., seus diretores e parceiros, contra quaisquer reclamações, danos ou despesas decorrentes do seu uso indevido da plataforma ou violação destes Termos.</p>
-                </div>
-            </div>
-        `
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 1 — Aceitação e Descrição do Serviço</strong><p style="color:var(--text-body);line-height:1.6">O presente acordo rege o acesso e uso dos serviços fornecidos pela Zuegle Inc. O Zuegle é um serviço de comunicação em tempo real que possibilita a troca anônima de mensagens de texto entre usuários. Ao acessar o Zuegle, você concorda integralmente com estes termos.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 2 — Elegibilidade</strong><p style="color:var(--text-body);line-height:1.6">O uso do Zuegle é permitido exclusivamente a pessoas com 18 anos ou mais. Ao utilizar a plataforma, você declara, sob responsabilidade legal, ter atingido essa idade.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 3 — Licença de Uso</strong><p style="color:var(--text-body);line-height:1.6">Concedemos ao usuário uma licença limitada, não exclusiva, revogável e intransferível para uso pessoal e não comercial do Zuegle. É expressamente proibido: descompilar ou aplicar engenharia reversa na plataforma, utilizar automação ou scripts, e usar a plataforma para fins comerciais sem autorização expressa.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 4 — Conduta do Usuário</strong><p style="color:var(--text-body);line-height:1.6">Você é inteiramente responsável pelo conteúdo que transmite através do Zuegle. É proibido transmitir qualquer conteúdo ilegal, abusivo, ameaçador, difamatório ou que viole direitos de terceiros.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 5 — Isenção de Responsabilidade</strong><p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. não se responsabiliza pelo conteúdo gerado pelos usuários. Na extensão máxima permitida pela lei, a Zuegle Inc. não será responsabilizada por danos diretos, indiretos, incidentais ou consequenciais resultantes do uso da plataforma.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 6 — Modificações e Rescisão</strong><p style="color:var(--text-body);line-height:1.6">Reservamo-nos o direito de modificar estes termos, as funcionalidades da plataforma ou encerrar o serviço a qualquer momento, sem aviso prévio.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula 7 — Indenização</strong><p style="color:var(--text-body);line-height:1.6">Você concorda em isentar e indenizar a Zuegle Inc., seus diretores e parceiros, contra quaisquer reclamações, danos ou despesas decorrentes do seu uso indevido da plataforma ou violação destes Termos.</p></div>
+            </div>`
     },
     privacy: {
         title: 'Política de Privacidade (Privacy)',
         content: `
             <div style="display:flex;flex-direction:column;gap:24px">
                 <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Data de vigência: 21 de março de 2026</p>
-                
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Nosso Compromisso</strong>
-                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. está comprometida com a minimização máxima de dados pessoais. Não coletamos o que não precisamos, não armazenamos o que não usamos e não compartilhamos o que não é necessário.</p>
-                </div>
-
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">A. Dados de Conversação</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O Zuegle não registra, arquiva ou armazena o conteúdo das mensagens trocadas entre usuários. As conversações existem exclusivamente de forma volátil durante a sessão ativa e são permanentemente descartadas no momento em que qualquer uma das partes encerra a conexão. Não existe histórico, banco de dados de mensagens ou qualquer forma de recuperação de conversas anteriores.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">B. Identificadores de Rede</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Por necessidade técnica inerente ao funcionamento de qualquer serviço conectado à internet, nossos sistemas processam metadados técnicos de conexão. Estes dados são utilizados exclusivamente para fins operacionais e de integridade da plataforma. Usuários que utilizam o serviço de forma regular têm seus dados de conexão removidos imediatamente após o encerramento da sessão. Dados associados a violações graves e confirmadas dos Termos de Serviço podem ser retidos pelo tempo necessário para garantir a segurança da comunidade.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">C. Preferências de Interface</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Utilizamos armazenamento local no próprio navegador do usuário exclusivamente para salvar preferências de interface, como a escolha entre tema claro ou escuro. Estes dados residem inteiramente no dispositivo do usuário e jamais são transmitidos aos nossos servidores.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">D. Serviços de Terceiros</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Para garantir a qualidade e a segurança da plataforma, utilizamos serviços especializados de terceiros que operam sob suas próprias políticas de privacidade. Podemos exibir publicidade através de parceiros comerciais. Não vendemos dados de usuários a anunciantes.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">E. Cooperação com Autoridades</strong>
-                    <p style="color:var(--text-body);line-height:1.6">O compromisso com o anonimato cessa diante de obrigações legais. Quando confrontados com determinações judiciais ou solicitações oficiais de autoridades competentes em casos que envolvam risco iminente à vida, exploração de menores ou crimes graves, forneceremos os dados técnicos disponíveis na extensão exigida pela lei.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">F. Seus Direitos</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Como não coletamos dados pessoais identificáveis, não existe perfil de usuário para acessar, corrigir ou excluir. Para qualquer dúvida relacionada a privacidade, entre em contato: <strong style="color:var(--brand-primary)">privacidade@zuegle.com</strong></p>
-                </div>
-            </div>
-        `
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Nosso Compromisso</strong><p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. está comprometida com a minimização máxima de dados pessoais. Não coletamos o que não precisamos, não armazenamos o que não usamos e não compartilhamos o que não é necessário.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">A. Dados de Conversação</strong><p style="color:var(--text-body);line-height:1.6">O Zuegle não registra, arquiva ou armazena o conteúdo das mensagens trocadas entre usuários. As conversações existem exclusivamente de forma volátil durante a sessão ativa e são permanentemente descartadas no momento em que qualquer uma das partes encerra a conexão.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">B. Identificadores de Rede</strong><p style="color:var(--text-body);line-height:1.6">Por necessidade técnica, nossos sistemas processam metadados técnicos de conexão utilizados exclusivamente para fins operacionais e de integridade da plataforma. Dados associados a violações graves podem ser retidos pelo tempo necessário para garantir a segurança da comunidade.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">C. Preferências de Interface</strong><p style="color:var(--text-body);line-height:1.6">Utilizamos armazenamento local no próprio navegador do usuário exclusivamente para salvar preferências de interface, como a escolha entre tema claro ou escuro. Estes dados residem inteiramente no dispositivo do usuário e jamais são transmitidos aos nossos servidores.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">D. Serviços de Terceiros</strong><p style="color:var(--text-body);line-height:1.6">Para garantir a qualidade e a segurança da plataforma, utilizamos serviços especializados de terceiros que operam sob suas próprias políticas de privacidade. Não vendemos dados de usuários a anunciantes.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">E. Cooperação com Autoridades</strong><p style="color:var(--text-body);line-height:1.6">O compromisso com o anonimato cessa diante de obrigações legais. Quando confrontados com determinações judiciais em casos que envolvam risco iminente à vida, exploração de menores ou crimes graves, forneceremos os dados técnicos disponíveis na extensão exigida pela lei.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">F. Seus Direitos</strong><p style="color:var(--text-body);line-height:1.6">Como não coletamos dados pessoais identificáveis, não existe perfil de usuário para acessar, corrigir ou excluir. Para dúvidas relacionadas a privacidade: <strong style="color:var(--brand-primary)">privacidade@zuegle.com</strong></p></div>
+            </div>`
     },
     legal: {
         title: 'Legal e Jurisdição (Legal)',
         content: `
             <div style="display:flex;flex-direction:column;gap:24px">
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Propriedade Intelectual</strong>
-                    <p style="color:var(--text-body);line-height:1.6">A arquitetura, o código-fonte, os logotipos, o design e a identidade visual do Zuegle são propriedade exclusiva da Zuegle Inc. É proibida a reprodução, cópia ou uso não autorizado da marca Zuegle. Violações resultarão em medidas legais imediatas.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Conformidade Legal</strong>
-                    <p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. opera em conformidade com a legislação brasileira aplicável e coopera com autoridades competentes quando legalmente exigido. Para notificações legais ou de direitos autorais: <strong style="color:var(--text-title)">legal@zuegle.com</strong></p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Jurisdição</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Este contrato é regido pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de São Paulo — SP para resolução de litígios, com renúncia a qualquer outro foro, salvo disposições imperativas de proteção ao consumidor.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Cláusula de Divisibilidade</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Se qualquer disposição destes termos for considerada inválida por tribunal competente, tal invalidade se limitará exclusivamente à cláusula em questão, permanecendo todas as demais em plena vigência.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Limitação de Responsabilidade</strong>
-                    <p style="color:var(--text-body);line-height:1.6">Em nenhuma circunstância a Zuegle Inc. será responsabilizada por danos que excedam o valor pago pelo usuário pelos serviços nos últimos 12 meses. Dado o caráter gratuito da plataforma, esta limitação se aplica em sua totalidade.</p>
-                </div>
-                <div>
-                    <strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Contato Jurídico</strong>
-                    <p style="color:var(--text-body);line-height:1.6"><strong style="color:var(--text-title)">legal@zuegle.com</strong></p>
-                </div>
-            </div>
-        `
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Propriedade Intelectual</strong><p style="color:var(--text-body);line-height:1.6">A arquitetura, o código-fonte, os logotipos, o design e a identidade visual do Zuegle são propriedade exclusiva da Zuegle Inc. É proibida a reprodução, cópia ou uso não autorizado da marca Zuegle.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Conformidade Legal</strong><p style="color:var(--text-body);line-height:1.6">A Zuegle Inc. opera em conformidade com a legislação brasileira aplicável e coopera com autoridades competentes quando legalmente exigido. Para notificações legais ou de direitos autorais: <strong style="color:var(--text-title)">legal@zuegle.com</strong></p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Jurisdição</strong><p style="color:var(--text-body);line-height:1.6">Este contrato é regido pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de São Paulo — SP para resolução de litígios.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Limitação de Responsabilidade</strong><p style="color:var(--text-body);line-height:1.6">Em nenhuma circunstância a Zuegle Inc. será responsabilizada por danos que excedam o valor pago pelo usuário pelos serviços nos últimos 12 meses. Dado o caráter gratuito da plataforma, esta limitação se aplica em sua totalidade.</p></div>
+                <div><strong style="color:var(--text-title);font-size:18px;display:block;margin-bottom:8px">Contato Jurídico</strong><p style="color:var(--text-body);line-height:1.6"><strong style="color:var(--text-title)">legal@zuegle.com</strong></p></div>
+            </div>`
     }
 };
 
 function openInfoModal(s){
-    const m=document.getElementById('info-modal');
-    document.getElementById('info-modal-title').textContent=footerContent[s].title;
-    document.getElementById('info-modal-content').innerHTML=footerContent[s].content;
+    const m = document.getElementById('info-modal');
+    document.getElementById('info-modal-title').textContent    = footerContent[s].title;
+    document.getElementById('info-modal-content').innerHTML    = footerContent[s].content;
     m.classList.add('on');
 }
-function closeInfoModal(){document.getElementById('info-modal').classList.remove('on');}
+function closeInfoModal(){ document.getElementById('info-modal').classList.remove('on'); }
 
-// LÓGICA DO CHAT INTACTA PARA COMUNICAR COM O BACKEND
-const socket=typeof io!=='undefined'?io():null;
-const scroll=document.getElementById('scroll');
-const land=document.getElementById('land');
-const chat=document.getElementById('chat');
-const termsModal=document.getElementById('terms-modal');
-const captchaModal=document.getElementById('spam-captcha-modal');
-const agreeChk=document.getElementById('agree-checkbox');
-const btnStart=document.getElementById('btn-start-chat');
-const chatbox=document.getElementById('chatbox');
-const msgInput=document.getElementById('msg');
-const btnSend=document.getElementById('btn-send');
-const btnStop=document.getElementById('btn-stop');
-const btnReport=document.getElementById('btn-report');
-const typing=document.getElementById('typing');
-const ocEl=document.getElementById('oc');
-const tagsInput=document.getElementById('tags-input');
-const cc=document.getElementById('cc');
+// ── SOCKET ────────────────────────────────────────────────────────────────────
+const socket = typeof io !== 'undefined' ? io() : null;
+const scrollEl  = document.getElementById('scroll');
+const land      = document.getElementById('land');
+const chat      = document.getElementById('chat');
+const termsModal   = document.getElementById('terms-modal');
+const captchaModal = document.getElementById('spam-captcha-modal');
+const agreeChk  = document.getElementById('agree-checkbox');
+const btnStart  = document.getElementById('btn-start-chat');
+const chatbox   = document.getElementById('chatbox');
+const msgInput  = document.getElementById('msg');
+const btnSend   = document.getElementById('btn-send');
+const btnStop   = document.getElementById('btn-stop');
+const btnReport = document.getElementById('btn-report');
+const typing    = document.getElementById('typing');
+const ocEl      = document.getElementById('oc');
+const tagsInput = document.getElementById('tags-input');
+const cc        = document.getElementById('cc');
 
-let isChatting=false,typingTimeout,captchaToken="",rcWidgetId=null,stopLocked=false,waitTimer=null,waitSecs=0;
+let isChatting   = false;
+let typingTimeout;
+let captchaToken = '';
+let rcWidgetId   = null;
+let stopLocked   = false;
+let waitTimer    = null;
+let waitSecs     = 0;
 
-// Contador e Ajuste da caixa de texto
-msgInput.addEventListener('input',function(){
-    this.style.height='auto';
-    this.style.height=this.scrollHeight+'px';
-    if(!this.value)this.style.height='auto';
-    const l=this.value.length;
-    if(l>=400){
-        cc.style.display='block';
-        cc.textContent=l+'/500';
-        cc.style.color=l>=480?'var(--status-danger)':'var(--text-muted)';
+// ── FIX: Listener único de input no msgInput (unificado) ──────────────────────
+msgInput.addEventListener('input', function() {
+    // Redimensiona automaticamente
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+    if (!this.value) this.style.height = 'auto';
+
+    // Contador de caracteres
+    const l = this.value.length;
+    if (l >= 400) {
+        cc.style.display = 'block';
+        cc.textContent   = l + '/500';
+        cc.style.color   = l >= 480 ? 'var(--status-danger)' : 'var(--text-muted)';
+    } else {
+        cc.style.display = 'none';
     }
-    else cc.style.display='none';
-    
+
+    // Habilita/desabilita botão de envio
     btnSend.disabled = l === 0;
+
+    // Typing indicator para o parceiro
+    if (!isChatting || !socket) return;
+    socket.emit('typing', true);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => socket.emit('typing', false), 1500);
 });
 
-function onCaptchaLoaded(){}
-function onSpamCaptchaSolved(t){captchaToken=t;captchaModal.classList.remove('on');startNewChat();}
+// ── CAPTCHA ───────────────────────────────────────────────────────────────────
+function onCaptchaLoaded() {}
+function onSpamCaptchaSolved(t) {
+    captchaToken = t;
+    captchaModal.classList.remove('on');
+    startNewChat();
+}
 
-agreeChk.addEventListener('change',()=>{ btnStart.disabled=!agreeChk.checked; });
+// ── MODAIS ────────────────────────────────────────────────────────────────────
+agreeChk.addEventListener('change', () => { btnStart.disabled = !agreeChk.checked; });
 
-function openTermsModal(){termsModal.classList.add('on');agreeChk.checked=false;btnStart.disabled=true;}
-function closeTermsModal(){termsModal.classList.remove('on');}
-function cancelSpamCaptcha(){captchaModal.classList.remove('on');disconnectChat("Cancelou a verificação.");}
+function openTermsModal()  { termsModal.classList.add('on'); agreeChk.checked = false; btnStart.disabled = true; }
+function closeTermsModal() { termsModal.classList.remove('on'); }
+function cancelSpamCaptcha() { captchaModal.classList.remove('on'); disconnectChat('Cancelou a verificação.'); }
 
-function acceptTermsAndStart(){
+function acceptTermsAndStart() {
     closeTermsModal();
-    scroll.style.display='none';
+    scrollEl.style.display = 'none';
     chat.classList.add('on');
     startNewChat();
 }
 
-function appendSystem(text,isAlert=false){
-    const d=document.createElement('div');
-    d.className='sys'+(isAlert?' alert':'');
-    d.textContent=text;
+// ── MENSAGENS ─────────────────────────────────────────────────────────────────
+function appendSystem(text, isAlert = false) {
+    const d = document.createElement('div');
+    d.className  = 'sys' + (isAlert ? ' alert' : '');
+    d.textContent = text;
     chatbox.appendChild(d);
     scrollBot();
     return d;
 }
 
-function appendYou(text){
-    const w=document.createElement('div');
-    w.className='mrow you';
-    w.innerHTML='<div class="mlbl">Você</div><div class="mbub">'+escapeHTML(text)+'</div>';
+function appendYou(text) {
+    const w = document.createElement('div');
+    w.className = 'mrow you';
+    w.innerHTML = '<div class="mlbl">Você</div><div class="mbub">' + escapeHTML(text) + '</div>';
     chatbox.appendChild(w);
     scrollBot();
 }
 
-function appendStranger(text){
-    const w=document.createElement('div');
-    w.className='mrow str';
-    w.innerHTML='<div class="mlbl">Parceiro</div><div class="mbub">'+escapeHTML(text)+'</div>';
+function appendStranger(text) {
+    const w = document.createElement('div');
+    w.className = 'mrow str';
+    w.innerHTML = '<div class="mlbl">Parceiro</div><div class="mbub">' + escapeHTML(text) + '</div>';
     chatbox.appendChild(w);
     scrollBot();
 }
 
-function scrollBot(){chatbox.scrollTop=chatbox.scrollHeight;}
+function scrollBot() { chatbox.scrollTop = chatbox.scrollHeight; }
 
-function escapeHTML(s){
-    return s.replace(/[&<>'"]/g,t=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]||t));
+function escapeHTML(s) {
+    return s.replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t] || t));
 }
 
-function startNewChat(){
-    chatbox.innerHTML='';
-    isChatting=false;
-    msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
-    btnStop.textContent='Parar Sessão'; btnStop.className='btn-stop-c';
+// ── CHAT ──────────────────────────────────────────────────────────────────────
+function startNewChat() {
+    chatbox.innerHTML = '';
+    isChatting = false;
+    msgInput.disabled  = true;
+    btnSend.disabled   = true;
+    btnReport.disabled = true;
+    btnStop.textContent = 'Parar Sessão';
+    btnStop.className   = 'btn-stop-c';
     typing.classList.remove('on');
-    msgInput.style.height='auto'; cc.style.display='none'; msgInput.value='';
-    clearInterval(waitTimer); waitSecs=0;
-    
-    appendSystem("Preparando infraestrutura de chat seguro...");
-    
-    if(socket){
-        const tags=tagsInput.value.split(',').map(t=>t.trim().toLowerCase()).filter(t=>t);
-        socket.emit('start_chat',{captchaToken,tags});
-        captchaToken="";
-        if(typeof grecaptcha!=='undefined'&&rcWidgetId!==null)grecaptcha.reset(rcWidgetId);
-    }else{
-        appendSystem("Falha na Rede: O servidor Socket.io está incontactável.",true);
+    msgInput.style.height = 'auto';
+    cc.style.display = 'none';
+    msgInput.value   = '';
+    clearInterval(waitTimer);
+    waitSecs = 0;
+
+    appendSystem('Preparando infraestrutura de chat seguro...');
+
+    if (socket) {
+        const tags = tagsInput.value.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+        socket.emit('start_chat', { captchaToken, tags });
+        captchaToken = '';
+        if (typeof grecaptcha !== 'undefined' && rcWidgetId !== null) grecaptcha.reset(rcWidgetId);
+    } else {
+        appendSystem('Falha na Rede: O servidor Socket.io está incontactável.', true);
     }
 }
 
-msgInput.addEventListener('input',()=>{
-    if(!isChatting||!socket)return;
-    socket.emit('typing',true);
-    clearTimeout(typingTimeout);
-    typingTimeout=setTimeout(()=>socket.emit('typing',false),1500);
-});
-
-if(socket){
-    socket.on('online_count',c=>{if(ocEl)ocEl.textContent=c.toLocaleString('pt-BR');});
-
-    socket.on('waiting',()=>{
-        const d=appendSystem("Alocando parceiro compatível... (0s)");
-        d.setAttribute('data-waiting','true');
-        waitSecs=0;clearInterval(waitTimer);
-        waitTimer=setInterval(()=>{
-            waitSecs++;
-            const m=Math.floor(waitSecs/60),s=waitSecs%60;
-            const t=m>0?m+'m '+s+'s':s+'s';
-            const el=chatbox.querySelector('[data-waiting]');
-            if(el)el.textContent='Alocando parceiro compatível... ('+t+')';
-        },1000);
+// ── SOCKET EVENTS ─────────────────────────────────────────────────────────────
+if (socket) {
+    // FIX: Reconexão automática — quando o servidor reinicia (cold start no Render)
+    // o Socket.io reconecta automaticamente. Detectamos isso e voltamos à tela inicial
+    // sem deixar o usuário preso numa interface quebrada.
+    socket.on('connect', () => {
+        // Se havia um chat ativo quando a conexão caiu, limpa o estado
+        if (isChatting || chat.classList.contains('on')) {
+            disconnectChat('Reconectado ao servidor. Inicia um novo bate-papo.');
+            // Volta à tela inicial
+            chat.classList.remove('on');
+            scrollEl.style.display = '';
+        }
     });
 
-    socket.on('captcha_required',()=>{
-        appendSystem("Bloqueio de Anti-Spam ativado.",true);
+    socket.on('disconnect', (reason) => {
+        // Informa o usuário se a desconexão não foi intencional
+        if (reason === 'io server disconnect' || reason === 'transport close' || reason === 'transport error') {
+            if (isChatting || chat.classList.contains('on')) {
+                disconnectChat('⚠️ Conexão perdida com o servidor. Reconectando...');
+            }
+        }
+    });
+
+    socket.on('online_count', c => { if (ocEl) ocEl.textContent = c.toLocaleString('pt-BR'); });
+
+    socket.on('waiting', () => {
+        const d = appendSystem('Alocando parceiro compatível... (0s)');
+        d.setAttribute('data-waiting', 'true');
+        waitSecs = 0; clearInterval(waitTimer);
+        waitTimer = setInterval(() => {
+            waitSecs++;
+            const m = Math.floor(waitSecs / 60), s = waitSecs % 60;
+            const t = m > 0 ? m + 'm ' + s + 's' : s + 's';
+            const el = chatbox.querySelector('[data-waiting]');
+            if (el) el.textContent = 'Alocando parceiro compatível... (' + t + ')';
+        }, 1000);
+    });
+
+    socket.on('captcha_required', () => {
+        appendSystem('Bloqueio de Anti-Spam ativado.', true);
         captchaModal.classList.add('on');
-        if(typeof grecaptcha!=='undefined'&&rcWidgetId===null){
-            rcWidgetId=grecaptcha.render('recaptcha-container',{
-                sitekey:'6LcnvZAsAAAAORHCrKuNaointELTbHu45We6TrT',
-                callback:onSpamCaptchaSolved
+        if (typeof grecaptcha !== 'undefined' && rcWidgetId === null) {
+            rcWidgetId = grecaptcha.render('recaptcha-container', {
+                sitekey: '6LcnvZAsAAAAORHCrKuNaointELTbHu45We6TrT',
+                callback: onSpamCaptchaSolved
             });
         }
     });
 
-    socket.on('chat_started',data=>{
+    socket.on('chat_started', data => {
         clearInterval(waitTimer);
-        chatbox.innerHTML='';
-        isChatting=true;
-        msgInput.disabled=false; btnReport.disabled=false;
+        chatbox.innerHTML = '';
+        isChatting = true;
+        msgInput.disabled  = false;
+        btnReport.disabled = false;
         msgInput.focus();
-        appendSystem("Conexão estabelecida com sucesso!");
-        if(data&&data.commonTags&&data.commonTags.length>0)
-            appendSystem("Assuntos em comum: "+data.commonTags.join(', '));
+        appendSystem('Conexão estabelecida com sucesso!');
+        if (data && data.commonTags && data.commonTags.length > 0)
+            appendSystem('Assuntos em comum: ' + data.commonTags.join(', '));
     });
 
-    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
-    socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
-    socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
-    socket.on('system_message',msg=>appendSystem(msg,true));
+    socket.on('receive_message',     msg  => { typing.classList.remove('on'); appendStranger(msg); });
+    socket.on('stranger_typing',     v    => { v ? typing.classList.add('on') : typing.classList.remove('on'); if (v) scrollBot(); });
+    socket.on('stranger_disconnected', () => disconnectChat('O parceiro desconectou da sala.'));
+    socket.on('system_message',      msg  => appendSystem(msg, true));
 }
 
-function sendMessage(){
-    if(!isChatting)return;
-    const text=msgInput.value.trim();
-    if(!text)return;
+// ── ENVIO ─────────────────────────────────────────────────────────────────────
+function sendMessage() {
+    if (!isChatting) return;
+    const text = msgInput.value.trim();
+    if (!text) return;
     appendYou(text);
-    if(socket){socket.emit('send_message',text);socket.emit('typing',false);}
-    msgInput.value=''; msgInput.style.height='auto'; cc.style.display='none'; btnSend.disabled=true;
+    if (socket) { socket.emit('send_message', text); socket.emit('typing', false); }
+    msgInput.value        = '';
+    msgInput.style.height = 'auto';
+    cc.style.display      = 'none';
+    btnSend.disabled      = true;
     msgInput.focus();
     clearTimeout(typingTimeout);
 }
 
-function handleEnter(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
 
-function handleStopButton(){
-    if(stopLocked)return;
-    stopLocked=true;setTimeout(()=>stopLocked=false,800);
-    if(isChatting){if(socket)socket.emit('stop_chat');disconnectChat("Sessão encerrada por você.");}
-    else startNewChat();
-}
-
-function handleReport(){
-    if(!isChatting)return;
-    if(confirm("Confirma o reporte e bloqueio deste usuário?")){
-        if(socket)socket.emit('report_user');
-        disconnectChat("Usuário reportado com sucesso. Sala fechada.");
+function handleStopButton() {
+    if (stopLocked) return;
+    stopLocked = true; setTimeout(() => stopLocked = false, 800);
+    if (isChatting) {
+        if (socket) socket.emit('stop_chat');
+        disconnectChat('Sessão encerrada por você.');
+    } else {
+        startNewChat();
     }
 }
 
-function disconnectChat(msg){
-    isChatting=false; typing.classList.remove('on');
+function handleReport() {
+    if (!isChatting) return;
+    if (confirm('Confirma o reporte e bloqueio deste usuário?')) {
+        if (socket) socket.emit('report_user');
+        disconnectChat('Usuário reportado com sucesso. Sala fechada.');
+    }
+}
+
+function disconnectChat(msg) {
+    isChatting = false;
+    typing.classList.remove('on');
     appendSystem(msg);
-    msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
-    btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
+    msgInput.disabled  = true;
+    btnSend.disabled   = true;
+    btnReport.disabled = true;
+    btnStop.textContent = 'Novo Bate-Papo';
+    btnStop.className   = 'btn-stop-c nc';
 }
 </script>
 </body>
