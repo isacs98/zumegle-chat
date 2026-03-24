@@ -253,10 +253,16 @@ io.on('connection', (socket) => {
                 }, 2000);
             }
 
-            // Quem enviou: não recebe aviso (não sabe que foi bloqueado, apenas enviou)
-            // Quem recebe: vê a mensagem censurada imediatamente, e logo a seguir recebe o aviso garantido
-            socket.to(room).emit('receive_message', msgCensurada);
-            socket.to(room).emit('system_message', '⚠️ O parceiro utilizou palavras que violam as diretrizes. A mensagem foi censurada.');
+            // Descobre o ID exato do parceiro para enviar a mensagem garantida diretamente a ele
+            const clients = io.sockets.adapter.rooms.get(room);
+            if (clients) {
+                for (const clientId of clients) {
+                    if (clientId !== socket.id) {
+                        io.to(clientId).emit('receive_message', msgCensurada);
+                        io.to(clientId).emit('system_message', '⚠️ O parceiro utilizou palavras que violam as diretrizes. A mensagem foi censurada.');
+                    }
+                }
+            }
             return;
         }
 
