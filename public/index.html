@@ -284,7 +284,7 @@
         .btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* INTERFACE DE CHAT ROBUSTA (Estilo Discord/Twitch) */
-        #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); }
+        #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); min-height: 0; overflow: hidden; }
         #chat.on { display: flex; }
         
         /* Cabeçalho Interno do Chat */
@@ -308,11 +308,11 @@
         
         /* Nomes acima das bolhas */
         .mlbl { font-family: var(--font-head); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; }
-        .mrow.you .mlbl { color: var(--brand-secondary); }
+        .mrow.you .mlbl { color: var(--brand-primary); }
         .mrow.str .mlbl { color: #71717a; }
         
         .mbub { padding: 16px 20px; border-radius: 12px; font-size: 16px; line-height: 1.6; font-weight: 500; }
-        .mrow.you .mbub { background: var(--brand-secondary); color: #fff; border-bottom-right-radius: 0; }
+        .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-right-radius: 0; }
         .mrow.str .mbub { background: #3f3f46; border: 2px solid #52525b; color: var(--text-title); border-bottom-left-radius: 0; }
         
         #typing { display: none; align-self: flex-start; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 12px 20px; border-radius: 12px; border: 2px solid var(--border-color); }
@@ -981,12 +981,12 @@ if(socket){
     socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
     socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
     socket.on('system_message',msg=>{
-        const d=appendSystem(msg,true);
-        d.style.background='rgba(239,68,68,0.12)';
-        d.style.color='var(--status-danger)';
-        d.style.border='1px solid rgba(239,68,68,0.4)';
-        d.style.padding='10px 20px';
-        d.style.borderRadius='8px';
+        const d=document.createElement('div');
+        d.className='sys alert';
+        d.textContent=msg;
+        d.style.cssText='background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.5);padding:10px 20px;border-radius:8px;align-self:center;';
+        chatbox.appendChild(d);
+        scrollBot();
     });
 }
 
