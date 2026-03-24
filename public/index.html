@@ -12,8 +12,8 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Fontes Robustas: Poppins para impacto, Inter para interface/leitura -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet">
+    <!-- Poppins com display=block — página fica invisível até fonte carregar, sem salto -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=block" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?onload=onCaptchaLoaded&render=explicit" async defer></script>
     
     <style>
@@ -26,8 +26,8 @@
             --bg-surface: #18181b; /* Cinza escuro para cards */
             --bg-surface-hover: #27272a;
             
-            --brand-primary: #3b82f6; /* Roxo Vibrante */
-            --brand-primary-hover: #2563eb;
+            --brand-primary: #8b5cf6; /* Roxo Vibrante */
+            --brand-primary-hover: #7c3aed;
             --brand-secondary: #06b6d4; /* Ciano Neon */
             
             --text-title: #ffffff;
@@ -54,8 +54,8 @@
             --bg-surface: #ffffff;
             --bg-surface-hover: #f1f5f9;
             
-            --brand-primary: #1d4ed8;
-            --brand-primary-hover: #1d4ed8;
+            --brand-primary: #6d28d9;
+            --brand-primary-hover: #5b21b6;
             --brand-secondary: #0891b2;
             
             --text-title: #09090b;
@@ -79,7 +79,6 @@
             overflow: hidden;
             transition: background-color 0.3s ease;
             position: relative;
-            min-height: 0;
         }
 
         /* Padrão de fundo rico (Grelha visível nos dois temas) */
@@ -283,7 +282,7 @@
         .btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* INTERFACE DE CHAT ROBUSTA (Estilo Discord/Twitch) */
-        #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); min-height: 0; overflow: hidden; }
+        #chat { display: none; flex-grow: 1; flex-direction: column; background: var(--bg-base); }
         #chat.on { display: flex; }
         
         /* Cabeçalho Interno do Chat */
@@ -294,67 +293,28 @@
         .chat-header h2 { font-family: var(--font-head); font-size: 18px; color: var(--text-title); }
         .chat-header .status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--status-online); }
         
-        #chatbox { flex-grow: 1; overflow-y: auto; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+        #chatbox { flex-grow: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 20px; }
         
-        .sys { font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--text-muted); text-align: center; padding: 8px 16px; background: var(--bg-surface); border-radius: 8px; align-self: center; max-width: 90%; word-break: break-word; }
-        .sys.alert { color: #ff6b6b !important; background: rgba(239,68,68,0.15) !important; border: 1px solid rgba(239,68,68,0.5) !important; padding: 12px 20px !important; font-size: 14px !important; font-weight: 700 !important; }
+        .sys { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--text-muted); text-align: center; padding: 8px 16px; background: var(--bg-surface); border-radius: 8px; align-self: center; text-transform: uppercase; letter-spacing: 1px; }
+        .sys.alert { color: var(--status-danger); border: 1px solid rgba(239,68,68,0.3); }
         
         .mrow { display: flex; flex-direction: column; gap: 6px; max-width: 85%; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Todas as mensagens alinhadas à esquerda */
-        /* ── SISTEMA DE MENSAGENS — TUDO À ESQUERDA ── */
-        .mrow { display: flex; flex-direction: column; align-items: flex-start; width: 100%; gap: 3px; }
-
-        /* Label nome */
-        .mlbl {
-            font-family: var(--font-head);
-            font-size: 11px; font-weight: 700;
-            letter-spacing: 0.8px; text-transform: uppercase;
-            margin: 0 2px 3px;
-        }
-        .mrow.you .mlbl { color: #3b82f6; }
-        .mrow.str .mlbl { color: #94a3b8; }
-
-        /* Bolhas */
-        .mbub {
-            padding: 12px 18px;
-            font-size: 15px; line-height: 1.65; font-weight: 400;
-            max-width: min(500px, 78%); word-break: break-word;
-            border-radius: 4px 18px 18px 18px;
-        }
-
-        /* VOCÊ — azul */
-        .mrow.you .mbub {
-            background: #1d4ed8 !important;
-            color: #eff6ff !important;
-            border: 1px solid #3b82f6 !important;
-        }
-
-        /* ESTRANHO — laranja escuro */
-        .mrow.str .mbub {
-            background: #1e2530 !important;
-            color: #cbd5e1 !important;
-            border: 1px solid #334155 !important;
-        }
-
-        /* Tema claro */
-        html.light .mrow.you .mbub {
-            background: #dbeafe;
-            color: #1e3a8a;
-            border: 1px solid #93c5fd;
-        }
-        html.light .mrow.str .mbub {
-            background: #f1f5f9;
-            color: #1e293b;
-            border: 1px solid #cbd5e1;
-        }
+        .mrow.you { align-self: flex-end; align-items: flex-end; }
+        .mrow.str { align-self: flex-start; align-items: flex-start; }
         
-        #typing { display: none; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 0 32px 12px; }
+        /* Nomes acima das bolhas */
+        .mlbl { font-family: var(--font-head); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 4px; }
+        .mrow.you .mlbl { color: var(--brand-primary); }
+        .mrow.str .mlbl { color: var(--brand-secondary); }
+        
+        .mbub { padding: 16px 20px; border-radius: 12px; font-size: 16px; line-height: 1.6; font-weight: 500; }
+        .mrow.you .mbub { background: var(--brand-primary); color: #fff; border-bottom-right-radius: 0; }
+        .mrow.str .mbub { background: var(--bg-surface); border: 2px solid var(--border-color); color: var(--text-title); border-bottom-left-radius: 0; }
+        
+        #typing { display: none; align-self: flex-start; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 12px 20px; border-radius: 12px; border: 2px solid var(--border-color); }
         #typing.on { display: flex; }
-        .tdots span { display: inline-block; width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; margin: 0 1px; animation: bounce 1s infinite; }
-        .tdots span:nth-child(2) { animation-delay: 0.2s; }
-        .tdots span:nth-child(3) { animation-delay: 0.4s; }
         .tdots span { display: inline-block; width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; margin: 0 2px; animation: bounce 1s infinite; }
         .tdots span:nth-child(2) { animation-delay: 0.2s; }
         .tdots span:nth-child(3) { animation-delay: 0.4s; }
@@ -401,24 +361,6 @@
             .btn-rep { height: 48px; width: 48px; }
             .mrow { max-width: 90%; }
         }
-
-        /* Logo spin animation */
-        @keyframes logoSpin {
-            0% { transform: rotate(-3deg) scale(1); }
-            25% { transform: rotate(15deg) scale(1.1); }
-            50% { transform: rotate(-10deg) scale(1.05); }
-            75% { transform: rotate(8deg) scale(1.1); }
-            100% { transform: rotate(-3deg) scale(1); }
-        }
-        .logo-ic.spinning { animation: logoSpin 0.6s ease; }
-
-        /* Status bar fade out */
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .status-fade { animation: fadeOut 3s ease forwards; }
     </style>
 </head>
 <body class="dark">
@@ -445,10 +387,6 @@
 
 <!-- AD BAR -->
 <div class="ad">Espaço Publicitário — Otimize a sua campanha do Google AdSense aqui</div>
-<div id="status-bar" style="display:none; padding:10px 32px; background:var(--bg-surface); border-bottom:2px solid var(--border-color); font-family:var(--font-head); font-size:13px; font-weight:700; color:var(--status-online); letter-spacing:0.5px; align-items:center; gap:8px; transition: opacity 0.6s ease;">
-    <div class="dot"></div>
-    <span id="status-bar-text">Conexão estabelecida com sucesso!</span>
-</div>
 
 <!-- SCROLL CONTAINER PRINCIPAL -->
 <div id="scroll">
@@ -596,13 +534,21 @@
 
 <!-- INTERFACE DE CHAT PRINCIPAL -->
 <main id="chat">
-
+    <div class="chat-header">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h2>Sessão Ativa</h2>
+        <div style="margin-left:auto" class="status"><div class="dot"></div> Protegido</div>
+    </div>
     
     <div id="chatbox"></div>
     
-    <div id="typing">
-        <div class="tdots"><span></span><span></span><span></span></div>
-        O parceiro está digitando
+    <!-- Bolha de Digitação Estilizada -->
+    <div style="padding: 0 32px">
+        <div id="typing">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            O Parceiro está digitando
+            <div class="tdots"><span></span><span></span><span></span></div>
+        </div>
     </div>
     
     <div id="bar">
@@ -896,12 +842,6 @@ msgInput.addEventListener('input',function(){
     else cc.style.display='none';
     
     btnSend.disabled = l === 0;
-
-    // Typing indicator para o parceiro
-    if(!isChatting||!socket)return;
-    socket.emit('typing',true);
-    clearTimeout(typingTimeout);
-    typingTimeout=setTimeout(()=>socket.emit('typing',false),1500);
 });
 
 function onCaptchaLoaded(){}
@@ -921,19 +861,10 @@ function acceptTermsAndStart(){
 }
 
 function appendSystem(text,isAlert=false){
-    const wrapper=document.createElement('div');
-    wrapper.style.cssText='width:100%;display:flex;justify-content:center;margin:4px 0;';
     const d=document.createElement('div');
-    if(isAlert){
-        d.style.cssText='display:inline-block;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;text-align:center;background:rgba(239,68,68,0.15);color:#ff6b6b;border:1px solid rgba(239,68,68,0.4);max-width:90%;word-break:break-word;';
-    } else {
-        d.style.cssText='display:inline-block;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;background:var(--bg-surface);color:var(--text-muted);max-width:90%;word-break:break-word;';
-    }
+    d.className='sys'+(isAlert?' alert':'');
     d.textContent=text;
-    if(!isAlert) d.setAttribute('data-waiting','');
-    wrapper.appendChild(d);
-    chatbox.appendChild(wrapper);
-    setTimeout(()=>scrollBot(), 30);
+    chatbox.appendChild(d);
     scrollBot();
     return d;
 }
@@ -949,7 +880,7 @@ function appendYou(text){
 function appendStranger(text){
     const w=document.createElement('div');
     w.className='mrow str';
-    w.innerHTML='<div class="mlbl">Estranho</div><div class="mbub">'+escapeHTML(text)+'</div>';
+    w.innerHTML='<div class="mlbl">Parceiro</div><div class="mbub">'+escapeHTML(text)+'</div>';
     chatbox.appendChild(w);
     scrollBot();
 }
@@ -981,15 +912,18 @@ function startNewChat(){
     }
 }
 
-
+msgInput.addEventListener('input',()=>{
+    if(!isChatting||!socket)return;
+    socket.emit('typing',true);
+    clearTimeout(typingTimeout);
+    typingTimeout=setTimeout(()=>socket.emit('typing',false),1500);
+});
 
 if(socket){
     socket.on('online_count',c=>{if(ocEl)ocEl.textContent=c.toLocaleString('pt-BR');});
 
     socket.on('waiting',()=>{
-        // Limpa mensagens anteriores e cria só UMA
-        chatbox.innerHTML='';
-        const d=appendSystem("Procurando alguém para conversar... (0s)");
+        const d=appendSystem("Alocando parceiro compatível... (0s)");
         d.setAttribute('data-waiting','true');
         waitSecs=0;clearInterval(waitTimer);
         waitTimer=setInterval(()=>{
@@ -997,7 +931,7 @@ if(socket){
             const m=Math.floor(waitSecs/60),s=waitSecs%60;
             const t=m>0?m+'m '+s+'s':s+'s';
             const el=chatbox.querySelector('[data-waiting]');
-            if(el)el.textContent='Procurando alguém para conversar... ('+t+')';
+            if(el)el.textContent='Alocando parceiro compatível... ('+t+')';
         },1000);
     });
 
@@ -1018,33 +952,15 @@ if(socket){
         isChatting=true;
         msgInput.disabled=false; btnReport.disabled=false;
         msgInput.focus();
-
-        // Som de conexão
-        playSound('connect');
-
-        // Animação do logo
-        spinLogo();
-
-        // Barra de status com fade
-        const sb=document.getElementById('status-bar');
-        if(sb){
-            sb.style.display='flex';
-            sb.style.opacity='1';
-            sb.classList.remove('status-fade');
-            void sb.offsetWidth; // reflow
-            sb.classList.add('status-fade');
-            setTimeout(()=>{ sb.style.display='none'; }, 3000);
-        }
-        if(data&&data.commonTags&&data.commonTags.length>0){
-            const sbText=document.getElementById('status-bar-text');
-            if(sbText) sbText.textContent='Conexão estabelecida! Interesses em comum: '+data.commonTags.join(', ');
-        }
+        appendSystem("Conexão estabelecida com sucesso!");
+        if(data&&data.commonTags&&data.commonTags.length>0)
+            appendSystem("Assuntos em comum: "+data.commonTags.join(', '));
     });
 
-    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);playSound('receive');});
+    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
     socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
     socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
-    socket.on('system_message',msg=>{ console.log('SYSTEM MSG:', msg); appendSystem(msg,true); });
+    socket.on('system_message',msg=>appendSystem(msg,true));
 }
 
 function sendMessage(){
@@ -1055,7 +971,6 @@ function sendMessage(){
     if(socket){socket.emit('send_message',text);socket.emit('typing',false);}
     msgInput.value=''; msgInput.style.height='auto'; cc.style.display='none'; btnSend.disabled=true;
     msgInput.focus();
-    playSound('send');
     clearTimeout(typingTimeout);
 }
 
@@ -1077,155 +992,10 @@ function handleReport(){
 }
 
 function disconnectChat(msg){
-    playSound('disconnect');
     isChatting=false; typing.classList.remove('on');
     appendSystem(msg);
     msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
     btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
-    const sb=document.getElementById('status-bar');
-    if(sb) sb.style.display='none';
-}
-
-// ── SONS NATURAIS ─────────────────────────────────────────────────────────
-const _AC = window.AudioContext || window.webkitAudioContext;
-let _ctx = null;
-function ac() {
-    if (!_ctx) _ctx = new _AC();
-    if (_ctx.state === 'suspended') _ctx.resume();
-    return _ctx;
-}
-
-// Reverb natural com sala pequena
-function mkReverb(ctx, sec, decay) {
-    const len = ctx.sampleRate * sec;
-    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
-    for (let c = 0; c < 2; c++) {
-        const d = buf.getChannelData(c);
-        for (let i = 0; i < len; i++)
-            d[i] = (Math.random()*2-1) * Math.pow(1-i/len, decay);
-    }
-    const cv = ctx.createConvolver();
-    cv.buffer = buf;
-    return cv;
-}
-
-// Simula o ataque/decay natural de um instrumento percussivo
-function mkEnv(ctx, gainNode, t, attack, hold, release) {
-    gainNode.gain.setValueAtTime(0, t);
-    gainNode.gain.linearRampToValueAtTime(1, t + attack);
-    gainNode.gain.setValueAtTime(1, t + attack + hold);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + attack + hold + release);
-}
-
-function playSound(type) {
-    try {
-        const ctx = ac();
-        const t = ctx.currentTime;
-        const out = ctx.createGain();
-        out.gain.value = 0.55;
-        out.connect(ctx.destination);
-
-        if (type === 'message' || type === 'send' || type === 'receive') {
-            // Som de "pop" de chat — suave, discreto, profissional
-            // Inspirado no som do Telegram/Signal
-            const buf = ctx.createBuffer(1, ctx.sampleRate * 0.15, ctx.sampleRate);
-            const data = buf.getChannelData(0);
-            // Ruído branco filtrado + tom puro = textura natural
-            for (let i = 0; i < data.length; i++) {
-                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.03));
-            }
-            const noise = ctx.createBufferSource();
-            noise.buffer = buf;
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = 1800;
-            filter.Q.value = 0.8;
-
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(820, t);
-            osc.frequency.exponentialRampToValueAtTime(580, t + 0.1);
-
-            const gOsc = ctx.createGain();
-            const gNoise = ctx.createGain();
-            mkEnv(ctx, gOsc,   t, 0.003, 0.01, 0.12);
-            mkEnv(ctx, gNoise, t, 0.001, 0.005, 0.08);
-            gOsc.gain.value = 0.4;
-            gNoise.gain.value = 0.15;
-
-            osc.connect(gOsc); gOsc.connect(out);
-            noise.connect(filter); filter.connect(gNoise); gNoise.connect(out);
-
-            osc.start(t); osc.stop(t + 0.15);
-            noise.start(t); noise.stop(t + 0.15);
-
-        } else if (type === 'connect') {
-            // Acorde de piano digital — duas notas rápidas ascendentes
-            // Simula um "ting" de cristal com harmônicos reais
-            [[392, 0], [523.25, 0.1], [659.25, 0.2]].forEach(([freq, delay]) => {
-                const osc  = ctx.createOscillator();
-                const osc2 = ctx.createOscillator(); // harmônico
-                const g    = ctx.createGain();
-                const rev  = mkReverb(ctx, 1.5, 1.2);
-
-                osc.type  = 'sine';
-                osc2.type = 'sine';
-                osc.frequency.value  = freq;
-                osc2.frequency.value = freq * 2; // oitava acima
-
-                g.gain.setValueAtTime(0, t + delay);
-                g.gain.linearRampToValueAtTime(0.45, t + delay + 0.005);
-                g.gain.exponentialRampToValueAtTime(0.0001, t + delay + 1.2);
-
-                const gH = ctx.createGain();
-                gH.gain.value = 0.15; // harmônico mais baixo
-
-                osc.connect(g);
-                osc2.connect(gH); gH.connect(g);
-                g.connect(rev); rev.connect(out);
-                g.connect(out);
-
-                osc.start(t + delay);  osc.stop(t + delay + 1.2);
-                osc2.start(t + delay); osc2.stop(t + delay + 1.2);
-            });
-
-        } else if (type === 'disconnect') {
-            // Dois tons descendentes suaves — como fechar uma porta gentilmente
-            [[440, 0], [330, 0.18]].forEach(([freq, delay]) => {
-                const osc = ctx.createOscillator();
-                const g   = ctx.createGain();
-                const rev = mkReverb(ctx, 0.8, 0.9);
-                const flt = ctx.createBiquadFilter();
-                flt.type = 'lowpass';
-                flt.frequency.setValueAtTime(1200, t + delay);
-                flt.frequency.exponentialRampToValueAtTime(400, t + delay + 0.5);
-
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, t + delay);
-                osc.frequency.exponentialRampToValueAtTime(freq * 0.7, t + delay + 0.5);
-
-                g.gain.setValueAtTime(0, t + delay);
-                g.gain.linearRampToValueAtTime(0.35, t + delay + 0.01);
-                g.gain.exponentialRampToValueAtTime(0.0001, t + delay + 0.6);
-
-                osc.connect(flt); flt.connect(g);
-                g.connect(rev); rev.connect(out);
-                g.connect(out);
-                osc.start(t + delay); osc.stop(t + delay + 0.7);
-            });
-        }
-    } catch(e) {}
-}
-
-// ── ANIMAÇÃO DO LOGO ───────────────────────────────────────────────────────
-function spinLogo() {
-    const ic = document.querySelector('.logo-ic');
-    if (!ic) return;
-    ic.classList.remove('spinning');
-    void ic.offsetWidth; // reflow para reiniciar animação
-    ic.classList.add('spinning');
-    setTimeout(() => ic.classList.remove('spinning'), 700);
 }
 </script>
 </body>
