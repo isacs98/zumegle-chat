@@ -256,9 +256,7 @@ io.on('connection', (socket) => {
             // Quem enviou: não recebe aviso (não sabe que foi bloqueado, apenas enviou)
             // Quem recebe: vê a mensagem censurada imediatamente, e logo a seguir recebe o aviso garantido
             socket.to(room).emit('receive_message', msgCensurada);
-            setTimeout(() => {
-                socket.to(room).emit('system_message', '⚠️ O parceiro utilizou palavras que violam as diretrizes. A mensagem foi censurada.');
-            }, 50); // Atraso minúsculo para garantir que as emissões cheguem separadamente na ordem correta
+            socket.to(room).emit('system_message', '⚠️ O parceiro utilizou palavras que violam as diretrizes. A mensagem foi censurada.');
             return;
         }
 
