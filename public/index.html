@@ -9,11 +9,12 @@
     <meta property="og:title" content="Zuegle — Chat Anônimo Brasileiro">
     <meta property="og:description" content="A forma mais rápida de conhecer novas pessoas online, sem registros.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="/og-image.svg">
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet">
+    <!-- Poppins com display=block — página fica invisível até fonte carregar, sem salto -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,500;0,700;0,800;0,900;1,800&display=block" rel="stylesheet">
+    <meta name="recaptcha-site-key" content="6LcnvZAsAAAAORHCrKuNaointELTbHu45We6TrT">
     <script src="https://www.google.com/recaptcha/api.js?onload=onCaptchaLoaded&render=explicit" async defer></script>
     
     <style>
@@ -401,7 +402,7 @@
             </div>
             <div class="hero-visual">
                 <!-- Imagem rica representando o lado social/jovem da plataforma -->
-                <img src="/hero.jpg" alt="Pessoas conversando online">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Grupo de jovens conversando e sorrindo">
             </div>
         </section>
 
@@ -808,6 +809,7 @@ function openInfoModal(s){
 function closeInfoModal(){document.getElementById('info-modal').classList.remove('on');}
 
 // LÓGICA DO CHAT INTACTA PARA COMUNICAR COM O BACKEND
+const RECAPTCHA_SITE_KEY = document.querySelector('meta[name="recaptcha-site-key"]')?.content || '6LcnvZAsAAAAORHCrKuNaointELTbHu45We6TrT';
 const socket=typeof io!=='undefined'?io():null;
 const scroll=document.getElementById('scroll');
 const land=document.getElementById('land');
@@ -828,7 +830,7 @@ const cc=document.getElementById('cc');
 
 let isChatting=false,typingTimeout,captchaToken="",rcWidgetId=null,stopLocked=false,waitTimer=null,waitSecs=0;
 
-// Contador, ajuste da caixa de texto e typing — listener único
+// Contador, ajuste da caixa de texto e evento de typing (único listener)
 msgInput.addEventListener('input',function(){
     this.style.height='auto';
     this.style.height=this.scrollHeight+'px';
@@ -840,7 +842,10 @@ msgInput.addEventListener('input',function(){
         cc.style.color=l>=480?'var(--status-danger)':'var(--text-muted)';
     }
     else cc.style.display='none';
+    
     btnSend.disabled = l === 0;
+
+    // Typing emit (unificado aqui — removido o listener duplicado abaixo)
     if(!isChatting||!socket)return;
     socket.emit('typing',true);
     clearTimeout(typingTimeout);
@@ -916,20 +921,6 @@ function startNewChat(){
 }
 
 if(socket){
-    // Reconexão automática — se o servidor reiniciar (cold start no Render), volta à tela inicial
-    socket.on('connect',()=>{
-        if(isChatting||chat.classList.contains('on')){
-            disconnectChat('Reconectado ao servidor. Inicia um novo bate-papo.');
-            chat.classList.remove('on');
-            scroll.style.display='';
-        }
-    });
-    socket.on('disconnect',(reason)=>{
-        if((reason==='transport close'||reason==='transport error')&&(isChatting||chat.classList.contains('on'))){
-            disconnectChat('⚠️ Conexão perdida. Reconectando...');
-        }
-    });
-
     socket.on('online_count',c=>{if(ocEl)ocEl.textContent=c.toLocaleString('pt-BR');});
 
     socket.on('waiting',()=>{
@@ -950,7 +941,7 @@ if(socket){
         captchaModal.classList.add('on');
         if(typeof grecaptcha!=='undefined'&&rcWidgetId===null){
             rcWidgetId=grecaptcha.render('recaptcha-container',{
-                sitekey:'6LcnvZAsAAAAORHCrKuNaointELTbHu45We6TrT',
+                sitekey: RECAPTCHA_SITE_KEY,
                 callback:onSpamCaptchaSolved
             });
         }
