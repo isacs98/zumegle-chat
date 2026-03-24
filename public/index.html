@@ -9,6 +9,8 @@
     <meta property="og:title" content="Zuegle — Chat Anônimo Brasileiro">
     <meta property="og:description" content="A forma mais rápida de conhecer novas pessoas online, sem registros.">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="/og-image.svg">
+    <meta property="og:url" content="https://zuegle.com">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -363,7 +365,7 @@
         }
     </style>
 </head>
-<body class="dark">
+<body>
 
 <!-- HEADER -->
 <header id="hdr">
@@ -401,7 +403,7 @@
             </div>
             <div class="hero-visual">
                 <!-- Imagem rica representando o lado social/jovem da plataforma -->
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Grupo de jovens conversando e sorrindo">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Grupo de jovens conversando e sorrindo" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--brand-primary),var(--brand-secondary))'">
             </div>
         </section>
 
@@ -512,6 +514,28 @@
         </div>
         <div class="mbody" id="info-modal-content"></div>
         <div class="mfoot"><div class="macts"><button class="btn-pri" onclick="closeInfoModal()">Fechar</button></div></div>
+    </div>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO DE REPORT -->
+<div id="report-confirm-modal" class="overlay">
+    <div class="mbox" style="max-width:440px;">
+        <div class="mhdr">
+            <div class="mtitle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--status-danger)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Confirmar Denúncia
+            </div>
+            <button class="mcls" onclick="closeReportModal()">✕</button>
+        </div>
+        <div class="mbody">
+            <p>Tem a certeza que deseja reportar e bloquear este utilizador? Esta ação encerrará a conversa imediatamente.</p>
+        </div>
+        <div class="mfoot">
+            <div class="macts">
+                <button class="btn-sec" onclick="closeReportModal()">Cancelar</button>
+                <button class="btn-pri" style="background:var(--status-danger)" onclick="confirmReport()">Confirmar Denúncia</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -985,10 +1009,17 @@ function handleStopButton(){
 
 function handleReport(){
     if(!isChatting)return;
-    if(confirm("Confirma o reporte e bloqueio deste usuário?")){
-        if(socket)socket.emit('report_user');
-        disconnectChat("Usuário reportado com sucesso. Sala fechada.");
-    }
+    document.getElementById('report-confirm-modal').classList.add('on');
+}
+
+function closeReportModal(){
+    document.getElementById('report-confirm-modal').classList.remove('on');
+}
+
+function confirmReport(){
+    closeReportModal();
+    if(socket)socket.emit('report_user');
+    disconnectChat("Usuário reportado com sucesso. Sala fechada.");
 }
 
 function disconnectChat(msg){
