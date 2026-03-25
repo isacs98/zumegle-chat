@@ -23,6 +23,46 @@
         @font-face { font-family: 'Inter'; src: url('/fonts/Inter-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Inter'; src: url('/fonts/Inter-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
     </style>
+    <style>
+        #loading-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #09090b;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #loading-screen.hide { opacity: 0; visibility: hidden; }
+
+        .ls-logo {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+            animation: lsPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes lsPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(139,92,246,0.4); }
+            50%       { transform: scale(1.08); box-shadow: 0 0 60px rgba(139,92,246,0.7); }
+        }
+
+        .ls-bar {
+            width: 160px; height: 3px;
+            background: #27272a;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .ls-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border-radius: 99px;
+            animation: lsBar 1.4s ease-in-out infinite;
+        }
+        @keyframes lsBar {
+            0%   { width: 0%;   margin-left: 0; }
+            50%  { width: 70%;  margin-left: 0; }
+            100% { width: 0%;   margin-left: 100%; }
+        }
+    </style>
     <script src="https://www.google.com/recaptcha/api.js?onload=onCaptchaLoaded&render=explicit" async defer></script>
     
     <style>
@@ -378,6 +418,17 @@
     </style>
 </head>
 <body>
+
+<!-- TELA DE LOADING -->
+<div id="loading-screen">
+    <div class="ls-logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="44" height="44">
+            <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.6382 20 9.34757 19.721 8.18841 19.2218L3 21L4.7782 15.8116C4.279 14.6524 4 13.3618 4 12C4 7.02944 8.02944 3 13 3C17.9706 3 21 7.02944 21 11.5Z"/>
+            <path d="M9 9L15 9L9 15L15 15"/>
+        </svg>
+    </div>
+    <div class="ls-bar"><div class="ls-bar-fill"></div></div>
+</div>
 
 <!-- HEADER -->
 <header id="hdr">
@@ -1080,6 +1131,18 @@ function spinLogo() {
     void logoIc.offsetWidth; // force reflow para reiniciar animation
     logoIc.classList.add('spin');
     setTimeout(() => logoIc.classList.remove('spin'), 650);
+}
+
+// ── TELA DE LOADING ───────────────────────────────────────────────────────────
+const loadingScreen = document.getElementById('loading-screen');
+function hideLoading() {
+    loadingScreen.classList.add('hide');
+    setTimeout(() => loadingScreen.remove(), 550);
+}
+if (document.readyState === 'complete') {
+    setTimeout(hideLoading, 300);
+} else {
+    window.addEventListener('load', () => setTimeout(hideLoading, 300));
 }
 </script>
 </body>
