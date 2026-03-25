@@ -112,6 +112,15 @@
         .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; cursor: pointer; }
         
         /* Novo Ícone de Logo Detalhado */
+        @keyframes logoSpin {
+            0%   { transform: rotate(-3deg) scale(1); }
+            25%  { transform: rotate(15deg) scale(1.12); }
+            50%  { transform: rotate(-10deg) scale(1.08); }
+            75%  { transform: rotate(8deg) scale(1.1); }
+            100% { transform: rotate(-3deg) scale(1); }
+        }
+        .logo-ic.spin { animation: logoSpin 0.6s ease; }
+
         .logo-ic {
             width: 44px; height: 44px;
             background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
@@ -963,9 +972,11 @@ if(socket){
         appendSystem("Conexão estabelecida com sucesso!");
         if(data&&data.commonTags&&data.commonTags.length>0)
             appendSystem("Assuntos em comum: "+data.commonTags.join(', '));
+        playSound('connect');
+        spinLogo();
     });
 
-    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);});
+    socket.on('receive_message',msg=>{typing.classList.remove('on');appendStranger(msg);playSound('message');});
     socket.on('stranger_typing',v=>{v?typing.classList.add('on'):typing.classList.remove('on');if(v)scrollBot();});
     socket.on('stranger_disconnected',()=>disconnectChat("O parceiro desconectou da sala."));
     socket.on('system_message',msg=>{
@@ -1000,6 +1011,7 @@ function sendMessage(){
     if(!text)return;
     appendYou(text);
     if(socket){socket.emit('send_message',text);socket.emit('typing',false);}
+    playSound('message');
     msgInput.value=''; msgInput.style.height='auto'; cc.style.display='none'; btnSend.disabled=true;
     msgInput.focus();
     clearTimeout(typingTimeout);
@@ -1034,6 +1046,33 @@ function disconnectChat(msg){
     appendSystem(msg);
     msgInput.disabled=true; btnSend.disabled=true; btnReport.disabled=true;
     btnStop.textContent='Novo Bate-Papo'; btnStop.className='btn-stop-c nc';
+    playSound('disconnect');
+}
+
+// ── SISTEMA DE SONS ───────────────────────────────────────────────────────────
+const sounds = {
+    message:    new Audio('/sounds/message.mp3'),
+    connect:    new Audio('/sounds/connect.mp3'),
+    disconnect: new Audio('/sounds/disconnect.mp3'),
+};
+// Pré-carrega todos
+Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.5; });
+
+function playSound(name) {
+    const s = sounds[name];
+    if (!s) return;
+    s.currentTime = 0;
+    s.play().catch(() => {}); // ignora erro se browser bloqueou antes de interação
+}
+
+// ── ANIMAÇÃO DO LOGO (girinho) ────────────────────────────────────────────────
+const logoIc = document.querySelector('.logo-ic');
+function spinLogo() {
+    if (!logoIc) return;
+    logoIc.classList.remove('spin');
+    void logoIc.offsetWidth; // force reflow para reiniciar animation
+    logoIc.classList.add('spin');
+    setTimeout(() => logoIc.classList.remove('spin'), 650);
 }
 </script>
 </body>
