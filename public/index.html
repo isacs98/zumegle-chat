@@ -382,13 +382,13 @@
         .btn-stop-c.nc { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
         .btn-stop-c.nc:hover { background: var(--brand-primary-hover); }
         
-        .inpw { flex-grow: 1; position: relative; }
+        .inpw { flex-grow: 1; position: relative; display: flex; align-items: stretch; }
         #msg { width: 100%; padding: 16px 70px 16px 20px; background: var(--bg-base); border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-body); font-size: 16px; color: var(--text-title); resize: none; outline: none; max-height: 150px; line-height: 1.5; transition: border-color 0.2s; }
         #msg:focus { border-color: var(--brand-primary); }
         #msg:disabled { opacity: 0.5; background: var(--border-light); cursor: not-allowed; }
         #cc { position: absolute; bottom: -22px; right: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); display: none; }
         
-        .btn-send-c { position: absolute; right: 8px; bottom: 8px; top: 8px; margin: auto; height: 40px; width: 40px; background: var(--brand-primary); border: none; border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .btn-send-c { position: absolute; right: 8px; top: 0; bottom: 0; margin: auto; height: 40px; width: 40px; background: var(--brand-primary); border: none; border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
         .btn-send-c:hover:not(:disabled) { background: var(--brand-primary-hover); }
         .btn-send-c:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
         
@@ -443,10 +443,10 @@
             .btn-stop-c { padding: 0; height: 44px; width: 44px; min-width: 44px; font-size: 0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
             .btn-stop-c::before { content: ''; display: block; width: 16px; height: 16px; background: currentColor; border-radius: 3px; }
             .btn-stop-c.nc::before { background: #fff; border-radius: 50%; }
-            .inpw { flex: 1; min-width: 0; }
+            .inpw { flex: 1; min-width: 0; display: flex; align-items: stretch; }
             #msg { padding: 10px 44px 10px 12px; font-size: 14px; }
             #msg:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px rgba(139,92,246,0.2); }
-            .btn-send-c { width: 30px; height: 30px; right: 6px; top: 6px; bottom: 6px; margin: auto; transform: none; border-radius: 6px; }
+            .btn-send-c { width: 30px; height: 30px; right: 6px; top: 0; bottom: 0; margin: auto; transform: none; border-radius: 6px; }
             .btn-send-c svg { width: 16px; height: 16px; }
             .btn-rep { width: 44px; height: 44px; flex-shrink: 0; }
             .mrow { max-width: 88%; }
@@ -1215,6 +1215,13 @@ if (document.readyState === 'complete') {
 } else {
     window.addEventListener('load', () => setTimeout(hideLoading, 300));
 }
+
+// ── FECHAR ABA / NAVEGADOR ────────────────────────────────────────────────────
+window.addEventListener('beforeunload', () => {
+    if (socket && isChatting) {
+        socket.emit('stop_chat');
+    }
+});
 </script>
 </body>
 </html>
