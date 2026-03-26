@@ -8,7 +8,9 @@ const helmet = require('helmet');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    maxHttpBufferSize: 1e5
+    maxHttpBufferSize: 1e5,
+    pingTimeout: 10000,
+    pingInterval: 5000,
 });
 
 app.use(helmet({ contentSecurityPolicy: false }));
